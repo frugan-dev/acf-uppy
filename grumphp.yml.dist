@@ -1,0 +1,18 @@
+grumphp:
+    tasks:
+        composer: ~
+        phpcsfixer:
+            config: .php_cs.dist
+        phplint:
+            exclude: ['build', 'symlink', 'vendor']
+        phpparser:
+            ignore_patterns: ['build', 'symlink', 'vendor']
+            visitors:
+                declare_strict_types: ~
+                forbidden_function_calls:
+                    blacklist:
+                        - 'var_dump'
+                        - 'print_r'
+        #phpstan:
+        #    configuration: phpstan.neon.dist
+        securitychecker: ~

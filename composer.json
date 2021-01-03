@@ -1,0 +1,26 @@
+{
+    "name": "frugan-it/acf-uppy",
+    "description": "Advanced Custom Fields: Uppy Field",
+    "type": "wordpress-plugin",
+    "license": "GPL-3.0-or-later",
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "AcfUppy\\": "src/"
+        }
+    },
+    "require": {
+        "ankitpokhrel/tus-php": "^2.1",
+        "apfelbox/php-file-download": "^2.1"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.17",
+        "nikic/php-parser": "^4.10",
+        "phpro/grumphp": "^0.19.1",
+        "phpstan/phpstan": "^0.12.64",
+        "sensiolabs/security-checker": "^6.0"
+    }
+}

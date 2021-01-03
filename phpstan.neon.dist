@@ -1,0 +1,6 @@
+parameters:
+    level: max
+    excludes_analyse:
+        - build/*
+        - symlink/*
+        - vendor/*

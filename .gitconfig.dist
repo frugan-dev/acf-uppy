@@ -1,0 +1,7 @@
+;https://stackoverflow.com/a/1889699
+;https://stackoverflow.com/a/18330114
+;https://gist.github.com/pksunkara/988716
+;https://dev.to/tomerbendavid/git-configurations-2ngi
+
+[core]
+    autocrlf = input

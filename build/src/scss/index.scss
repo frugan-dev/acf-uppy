@@ -1,0 +1,20 @@
+@import "~@uppy/core/src/style";
+@import "~@uppy/file-input/src/style";
+@import "~@uppy/status-bar/src/style";
+@import "~@uppy/informer/src/style";
+
+.uppy-FileInput-btn {
+  outline: none;
+}
+
+.UppyStatusBar {
+
+  .is-uploading {
+    margin-bottom: 1rem;
+  }
+}
+
+.UppyDelete {
+  text-decoration: none;
+  outline: none;
+}
