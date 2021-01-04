@@ -140,6 +140,9 @@ dist
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
+# PHPStorm settings
+.idea/
+
 ### Sass ###
 .sass-cache/
 *.css.map
