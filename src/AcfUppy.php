@@ -270,31 +270,36 @@ class AcfUppy
         }, 0);
 
         add_action('wp', function ($wp): void {
-            if (is_user_logged_in()) {
-                if (!defined('DOING_AJAX') || !DOING_AJAX) {
-                    if (is_dir($this->settings['tmpPath'])) {
-                        require_once(ABSPATH . '/wp-admin/includes/file.php');
-                        WP_Filesystem();
+            if (!is_user_logged_in()) {
+                return;
+            }
+            if (defined('DOING_AJAX') && DOING_AJAX) {
+                return;
+            }
+            if (is_dir($this->settings['tmpPath'])) {
+                require_once(ABSPATH . '/wp-admin/includes/file.php');
+                WP_Filesystem();
 
-                        global $wp_filesystem;
+                global $wp_filesystem;
 
-                        foreach (glob(trailingslashit($this->settings['tmpPath']) . '*') as $path) {
-                            if (is_dir($path)) {
-                                @$wp_filesystem->rmdir($path, true);
-                            }
+                $paths = glob(trailingslashit($this->settings['tmpPath']) . '*');
+                if(false !== $paths){
+                    foreach ($paths as $path) {
+                        if (is_dir($path)) {
+                            @$wp_filesystem->rmdir($path, true);
                         }
                     }
+                }
+            }
 
-                    //https://github.com/ankitpokhrel/tus-php/issues/102
-                    $cacheKeys = $this->server->getCache()->keys();
-                    //$this->server->getCache()->deleteAll( $cacheKeys );
+            //https://github.com/ankitpokhrel/tus-php/issues/102
+            $cacheKeys = $this->server->getCache()->keys();
+            //$this->server->getCache()->deleteAll( $cacheKeys );
 
-                    foreach ($cacheKeys as $cacheKey) {
-                        if ($oldFileMeta = $this->server->getCache()->get($cacheKey)) {
-                            if (preg_match('~^'.preg_quote(trailingslashit($this->settings['tmpPath'])).'~', $oldFileMeta['file_path'])) {
-                                $this->server->getCache()->delete($cacheKey);
-                            }
-                        }
+            foreach ($cacheKeys as $cacheKey) {
+                if ($oldFileMeta = $this->server->getCache()->get($cacheKey)) {
+                    if (preg_match('~^'.preg_quote(trailingslashit($this->settings['tmpPath'])).'~', $oldFileMeta['file_path'])) {
+                        $this->server->getCache()->delete($cacheKey);
                     }
                 }
             }
@@ -311,7 +316,11 @@ class AcfUppy
 
                     foreach ($destPaths as $destPath) {
                         if (is_dir($destPath)) {
-                            foreach (glob(trailingslashit($destPath) . '*') as $path) {
+                            $paths = glob(trailingslashit($destPath) . '*');
+                            if(false === $paths){
+                                continue;
+                            }
+                            foreach ($paths as $path) {
                                 if (is_file($path)) {
                                     if (in_array($path, $destFiles, true)) {
                                         continue;
