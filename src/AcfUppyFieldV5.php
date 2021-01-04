@@ -17,6 +17,11 @@ class AcfUppyFieldV5 extends \acf_field
     public $server;
 
     /**
+     * @var array
+     */
+    public $paths;
+
+    /**
     *  __construct
     *
     *  This function will setup the field type data
@@ -25,6 +30,7 @@ class AcfUppyFieldV5 extends \acf_field
     *  @date	5/03/2014
     *  @since	5.0.0
     *
+     * @param array{version:string,fieldType:string,url:string,path:string,destPath:string,tmpPath:string,symlinkUrl:string,symlinkPath:string,cacheTtl:string} $settings
     */
     public function __construct(
         array $settings,
@@ -143,8 +149,6 @@ class AcfUppyFieldV5 extends \acf_field
     *
     *  Create the HTML interface for your field
     *
-    *  @param	$field (array) the $field being rendered
-    *
     *  @type	action
     *  @since	3.6
     *  @date	23/01/13
@@ -154,6 +158,8 @@ class AcfUppyFieldV5 extends \acf_field
     public function render_field($field): void
     {
         global $post;
+
+        $destFile = '';
 
         if (!empty($field['value'])) {
             $destPath = !empty($field['destPath']) ? trailingslashit($field['destPath']) : apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/dest_path/type='.$post->post_type, trailingslashit($this->settings['destPath']), $post->ID, $field);
@@ -169,15 +175,17 @@ class AcfUppyFieldV5 extends \acf_field
         if (!empty($field['allowedFileTypes'])) {
             $array = preg_split('/\r\n|[\r\n]/', $field['allowedFileTypes']);
 
-            //http://stackoverflow.com/a/8321709
-            $array = array_flip(array_flip($array));
+            if(false !== $array){
+                //http://stackoverflow.com/a/8321709
+                $array = array_flip(array_flip($array));
 
-            $field['allowedFileTypes'] = wp_json_encode($array);
+                $field['allowedFileTypes'] = wp_json_encode($array);
+            }
         } ?>
         <input type="hidden" name="<?php esc_attr_e($field['name']) ?>" value="<?php esc_attr_e(!empty($found) ? $field['value'] : '') ?>">
         <div class="UppyFileInput"
              data-fieldName="<?php esc_attr_e($field['name']) ?>"
-             data-maxFileSize="<?php esc_attr_e($field['maxFileSize'] * 1024 * 1024) ?>"
+             data-maxFileSize="<?php esc_attr_e((string)($field['maxFileSize'] * 1024 * 1024)) ?>"
              data-allowedFileTypes="<?php esc_attr_e($field['allowedFileTypes']) ?>">
         </div>
         <div class="UppyStatusBar"></div>
@@ -189,7 +197,7 @@ class AcfUppyFieldV5 extends \acf_field
                 </a>
                 <a href="<?php echo esc_url(
             site_url('/' . apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/base_path', ACF_UPPY_NAME) . '/download/' . trailingslashit($post->ID) . trailingslashit(wp_hash($destFile)))
-        ) ?>"><?php esc_html_e($field['value']) ?></a> (<?php echo size_format(filesize($destFile), 2) ?>)
+        ) ?>"><?php esc_html_e($field['value']) ?></a> (<?php echo size_format((int)filesize($destFile), 2) ?>)
             <?php } ?>
         </div>
         <?php
@@ -208,31 +216,37 @@ class AcfUppyFieldV5 extends \acf_field
     public function input_admin_enqueue_scripts(): void
     {
         // register & include JS
-        foreach (glob($this->settings['path'].'/assets/js'.(!empty(WP_DEBUG) ? '' : '/min').'/npm/*.js') as $file) {
-            wp_register_script(
-                $this->name.'-npm-'.basename($file, '.js'),
-                $this->settings['url'].'assets/js'.(!empty(WP_DEBUG) ? '' : '/min').'/npm/'.basename($file),
-                array('acf-input'),
-                $this->settings['version'],
-                true
-            );
-            wp_enqueue_script($this->name.'-npm-'.basename($file, '.js'));
+        $paths = glob($this->settings['path'].'/assets/js'.(!empty(WP_DEBUG) ? '' : '/min').'/npm/*.js');
+        if(false !== $paths) {
+            foreach ($paths as $file) {
+                wp_register_script(
+                    $this->name . '-npm-' . basename($file, '.js'),
+                    $this->settings['url'] . 'assets/js' . (!empty(WP_DEBUG) ? '' : '/min') . '/npm/' . basename($file),
+                    array('acf-input'),
+                    $this->settings['version'],
+                    true
+                );
+                wp_enqueue_script($this->name . '-npm-' . basename($file, '.js'));
+            }
         }
 
-        foreach (glob($this->settings['path'].'/assets/js'.(!empty(WP_DEBUG) ? '' : '/min').'/*.js') as $file) {
-            wp_register_script(
-                $this->name.'-'.basename($file, '.js'),
-                $this->settings['url'].'assets/js'.(!empty(WP_DEBUG) ? '' : '/min').'/'.basename($file),
-                array('acf-input'),
-                $this->settings['version'],
-                true
-            );
+        $paths = glob($this->settings['path'].'/assets/js'.(!empty(WP_DEBUG) ? '' : '/min').'/*.js');
+        if(false !== $paths) {
+            foreach ($paths as $file) {
+                wp_register_script(
+                    $this->name . '-' . basename($file, '.js'),
+                    $this->settings['url'] . 'assets/js' . (!empty(WP_DEBUG) ? '' : '/min') . '/' . basename($file),
+                    array('acf-input'),
+                    $this->settings['version'],
+                    true
+                );
 
-            if (basename($file, '.js') === 'main') {
-                wp_localize_script($this->name.'-'.basename($file, '.js'), $this->name.'L10n', $this->l10n);
+                if (basename($file, '.js') === 'main') {
+                    wp_localize_script($this->name . '-' . basename($file, '.js'), $this->name . 'L10n', $this->l10n);
+                }
+
+                wp_enqueue_script($this->name . '-' . basename($file, '.js'));
             }
-
-            wp_enqueue_script($this->name.'-'.basename($file, '.js'));
         }
 
         $files = array(
@@ -257,24 +271,30 @@ class AcfUppyFieldV5 extends \acf_field
         }
 
         // register & include CSS
-        foreach (glob($this->settings['path'].'/assets/css'.(!empty(WP_DEBUG) ? '' : '/min').'/npm/*.css') as $file) {
-            wp_register_style(
-                $this->name.'-npm-'.basename($file, '.css'),
-                $this->settings['url'].'assets/css'.(!empty(WP_DEBUG) ? '' : '/min').'/npm/'.basename($file),
-                array('acf-input'),
-                $this->settings['version']
-            );
-            wp_enqueue_style($this->name.'-npm-'.basename($file, '.css'));
+        $paths = glob($this->settings['path'].'/assets/css'.(!empty(WP_DEBUG) ? '' : '/min').'/npm/*.css');
+        if(false !== $paths) {
+            foreach ($paths as $file) {
+                wp_register_style(
+                    $this->name . '-npm-' . basename($file, '.css'),
+                    $this->settings['url'] . 'assets/css' . (!empty(WP_DEBUG) ? '' : '/min') . '/npm/' . basename($file),
+                    array('acf-input'),
+                    $this->settings['version']
+                );
+                wp_enqueue_style($this->name . '-npm-' . basename($file, '.css'));
+            }
         }
 
-        foreach (glob($this->settings['path'].'/assets/css'.(!empty(WP_DEBUG) ? '' : '/min').'/*.css') as $file) {
-            wp_register_style(
-                $this->name.'-'.basename($file, '.css'),
-                $this->settings['url'].'assets/css'.(!empty(WP_DEBUG) ? '' : '/min').'/'.basename($file),
-                array('acf-input'),
-                $this->settings['version']
-            );
-            wp_enqueue_style($this->name.'-'.basename($file, '.css'));
+        $paths = glob($this->settings['path'].'/assets/css'.(!empty(WP_DEBUG) ? '' : '/min').'/*.css');
+        if(false !== $paths) {
+            foreach ($paths as $file) {
+                wp_register_style(
+                    $this->name . '-' . basename($file, '.css'),
+                    $this->settings['url'] . 'assets/css' . (!empty(WP_DEBUG) ? '' : '/min') . '/' . basename($file),
+                    array('acf-input'),
+                    $this->settings['version']
+                );
+                wp_enqueue_style($this->name . '-' . basename($file, '.css'));
+            }
         }
     }
 
@@ -361,7 +381,7 @@ class AcfUppyFieldV5 extends \acf_field
     *
     *  @param	bool $valid validation status based on the value and the field's required setting
     *  @param	mixed $value the $_POST value
-    *  @param	arrat $field the field array holding all the field options
+    *  @param	array $field the field array holding all the field options
     *  @param	string $input the corresponding input name for $_POST value
     *  @return	bool
     */
@@ -397,7 +417,13 @@ class AcfUppyFieldV5 extends \acf_field
 
                 $counter = 0;
                 while (file_exists($destPath . $value)) {
-                    $value = apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/file_name_exists', $pathinfo['filename'] . '-' . ++$counter . '.' . $pathinfo['extension'], $destPath, $pathinfo, $counter);
+                    $value = apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/file_name_exists',
+                        $pathinfo['filename'] .
+                        '-' .
+                        ++$counter .
+                        /** @phpstan-ignore-next-line */
+                        isset($pathinfo['extension']) ? '.' . $pathinfo['extension'] : ''
+                        , $destPath, $pathinfo, $counter);
                 }
             }
 

@@ -491,7 +491,7 @@ class AcfUppy
             foreach ($fieldsObj as $field) {
                 if ($field['type'] === $this->settings['fieldType']) {
                     $destPath = !empty($field['destPath']) ? trailingslashit($field['destPath']) : apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/dest_path/type='.$postType, trailingslashit($this->settings['destPath']), $postId, $field);
-                    $destPath .= trailingslashit((int)$postId);
+                    $destPath .= trailingslashit((string)$postId);
 
                     if ($fullPath) {
                         $destPath .= trailingslashit(sanitize_file_name($field['key']));
