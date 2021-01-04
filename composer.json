@@ -12,10 +12,31 @@
             "AcfUppy\\": "src/"
         }
     },
+    "autoload-dev": {
+        "classmap": [
+            "vendor/wpackagist-plugin"
+        ]
+    },
+    "extra": {
+        "installer-paths": {
+            "vendor/wpackagist-plugin/{$name}/": [
+                "type:wordpress-plugin"
+            ]
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://wpackagist.org",
+            "only": [
+                "wpackagist-plugin/*"
+            ]
+        }
+    ],
     "require": {
         "ankitpokhrel/tus-php": "^2.1",
         "apfelbox/php-file-download": "^2.1",
-        "php": "^7.0"
+        "php": "^7.1"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.17",
@@ -23,6 +44,7 @@
         "phpro/grumphp": "^0.19.1",
         "phpstan/phpstan": "^0.12.64",
         "sensiolabs/security-checker": "^6.0",
-        "szepeviktor/phpstan-wordpress": "^0.7.2"
+        "szepeviktor/phpstan-wordpress": "^0.7.2",
+        "wpackagist-plugin/advanced-custom-fields": "^5.9"
     }
 }
