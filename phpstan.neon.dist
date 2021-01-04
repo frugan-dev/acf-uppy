@@ -6,6 +6,8 @@ parameters:
         - acf-uppy.php
     bootstrapFiles:
         - stubs/constants.stub
+    scanDirectories:
+        - vendor/wpackagist-plugin/advanced-custom-fields/includes
     paths:
         - src/
     ignoreErrors:
