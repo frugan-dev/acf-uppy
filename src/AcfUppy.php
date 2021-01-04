@@ -12,10 +12,19 @@
 namespace AcfUppy;
 
 use Apfelbox\FileDownload\FileDownload;
+use TusPhp\Cache\AbstractCache;
+use TusPhp\Tus\Server;
 
 class AcfUppy
 {
+    /**
+     * @var array{version:string,fieldType:string,url:string,path:string,destPath:mixed,tmpPath:mixed,symlinkUrl:mixed,symlinkPath:mixed,cacheTtl:mixed}
+     */
     public $settings;
+
+    /**
+     * @var Server
+     */
     public $server;
 
     /*
@@ -26,9 +35,6 @@ class AcfUppy
     *  @type	function
     *  @date	17/02/2016
     *  @since	1.0.0
-    *
-    *  @param	void
-    *  @return	void
     */
     public function __construct()
     {
@@ -62,7 +68,10 @@ class AcfUppy
             );
 
             //https://github.com/ankitpokhrel/tus-php/issues/102
-            $this->server->getCache()->setTtl($this->settings['cacheTtl']);
+            $cache = $this->server->getCache();
+            if($cache instanceof AbstractCache){
+                $cache->setTtl($this->settings['cacheTtl']);
+            }
 
             $this->server->middleware()->add(
                 \AcfUppy\Middleware\Auth::class,
@@ -379,8 +388,7 @@ class AcfUppy
     *  @date	17/02/2016
     *  @since	1.0.0
     *
-    *  @param	$version (int) major ACF version. Defaults to false
-    *  @return	void
+    *  @param	int|false $version major ACF version. Defaults to false
     */
     public function include_field($version = false): void
     {
@@ -407,7 +415,7 @@ class AcfUppy
         }
     }
 
-    public function getSubValues(array $values, string $fieldName, array $returns = array())
+    public function getSubValues(array $values, string $fieldName, array $returns = array()): array
     {
         if (!empty($values) && !empty($fieldName)) {
             foreach ($values as $id => $subValues) {
@@ -424,7 +432,7 @@ class AcfUppy
         return $returns;
     }
 
-    public function getDestFiles(array $fieldsObj, int $postId, array $values = array(), array $returns = array())
+    public function getDestFiles(array $fieldsObj, int $postId, array $values = array(), array $returns = array()): array
     {
         if (!empty($fieldsObj)) {
             $postType = get_post_type($postId);
@@ -455,7 +463,7 @@ class AcfUppy
         return $returns;
     }
 
-    public function getDestPaths(array $fieldsObj, int $postId, $fullPath = true, array $returns = array())
+    public function getDestPaths(array $fieldsObj, int $postId, $fullPath = true, array $returns = array()): array
     {
         if (!empty($fieldsObj)) {
             $postType = get_post_type($postId);

@@ -2,9 +2,18 @@
 
 namespace AcfUppy;
 
+use TusPhp\Tus\Server;
+
 class AcfUppyFieldV5 extends \acf_field
 {
+    /**
+     * @var array{version:string,fieldType:string,url:string,path:string,destPath:string,tmpPath:string,symlinkUrl:string,symlinkPath:string,cacheTtl:string}
+     */
     public $settings;
+
+    /**
+     * @var Server
+     */
     public $server;
 
     /*
@@ -16,12 +25,10 @@ class AcfUppyFieldV5 extends \acf_field
     *  @date	5/03/2014
     *  @since	5.0.0
     *
-    *  @param	n/a
-    *  @return	n/a
     */
     public function __construct(
-        $settings,
-        $server
+        array $settings,
+        Server $server
     ) {
         /*
         *  settings (array) Store plugin settings (url, path, version) as a reference for later use with assets
@@ -83,8 +90,7 @@ class AcfUppyFieldV5 extends \acf_field
     *  @since	3.6
     *  @date	23/01/13
     *
-    *  @param	$field (array) the $field being edited
-    *  @return	n/a
+    *  @param	array $field the $field being edited
     */
     public function render_field_settings($field): void
     {
@@ -143,8 +149,7 @@ class AcfUppyFieldV5 extends \acf_field
     *  @since	3.6
     *  @date	23/01/13
     *
-    *  @param	$field (array) the $field being edited
-    *  @return	n/a
+    *  @param	array $field the $field being edited
     */
     public function render_field($field): void
     {
@@ -199,9 +204,6 @@ class AcfUppyFieldV5 extends \acf_field
     *  @type	action (admin_enqueue_scripts)
     *  @since	3.6
     *  @date	23/01/13
-    *
-    *  @param	n/a
-    *  @return	n/a
     */
     public function input_admin_enqueue_scripts(): void
     {
@@ -285,9 +287,6 @@ class AcfUppyFieldV5 extends \acf_field
     *  @type	action (admin_head)
     *  @since	3.6
     *  @date	23/01/13
-    *
-    *  @param	n/a
-    *  @return	n/a
     */
     /*
     public function input_admin_head()
@@ -309,8 +308,7 @@ class AcfUppyFieldV5 extends \acf_field
     *  @date	6/03/2014
     *  @since	5.0.0
     *
-    *  @param	$args (array)
-    *  @return	n/a
+    *  @param	array $args (array)
     */
     /*
 
@@ -329,9 +327,6 @@ class AcfUppyFieldV5 extends \acf_field
     *  @type	action (admin_footer)
     *  @since	3.6
     *  @date	23/01/13
-    *
-    *  @param	n/a
-    *  @return	n/a
     */
     /*
     public function input_admin_footer()
@@ -349,9 +344,6 @@ class AcfUppyFieldV5 extends \acf_field
     *  @type	action (admin_enqueue_scripts)
     *  @since	3.6
     *  @date	23/01/13
-    *
-    *  @param	n/a
-    *  @return	n/a
     */
     /*
     public function field_group_admin_enqueue_scripts()
@@ -369,9 +361,6 @@ class AcfUppyFieldV5 extends \acf_field
     *  @type	action (admin_head)
     *  @since	3.6
     *  @date	23/01/13
-    *
-    *  @param	n/a
-    *  @return	n/a
     */
     /*
     public function field_group_admin_head()
@@ -389,10 +378,10 @@ class AcfUppyFieldV5 extends \acf_field
     *  @since	3.6
     *  @date	23/01/13
     *
-    *  @param	$value (mixed) the value found in the database
-    *  @param	$post_id (mixed) the $post_id from which the value was loaded
-    *  @param	$field (array) the field array holding all the field options
-    *  @return	$value
+    *  @param	mixed $value the value found in the database
+    *  @param	mixed $post_id the $post_id from which the value was loaded
+    *  @param	array $field the field array holding all the field options
+    *  @return	mixed
     */
     /*
     public function load_value( $value, $post_id, $field )
@@ -411,10 +400,10 @@ class AcfUppyFieldV5 extends \acf_field
     *  @since	3.6
     *  @date	23/01/13
     *
-    *  @param	$value (mixed) the value found in the database
-    *  @param	$post_id (mixed) the $post_id from which the value was loaded
-    *  @param	$field (array) the field array holding all the field options
-    *  @return	$value
+    *  @param	mixed $value the value found in the database
+    *  @param	mixed $post_id the $post_id from which the value was loaded
+    *  @param	array $field the field array holding all the field options
+    *  @return	mixed
     */
     public function update_value($value, $post_id, $field)
     {
@@ -480,11 +469,11 @@ class AcfUppyFieldV5 extends \acf_field
     *  @since	3.6
     *  @date	23/01/13
     *
-    *  @param	$value (mixed) the value which was loaded from the database
-    *  @param	$post_id (mixed) the $post_id from which the value was loaded
-    *  @param	$field (array) the field array holding all the field options
+    *  @param	mixed $value the value which was loaded from the database
+    *  @param	mixed $post_id the $post_id from which the value was loaded
+    *  @param	array $field the field array holding all the field options
     *
-    *  @return	$value (mixed) the modified value
+    *  @return	mixed $value the modified value
     */
     /*
     public function format_value( $value, $post_id, $field )
@@ -518,11 +507,11 @@ class AcfUppyFieldV5 extends \acf_field
     *  @date	11/02/2014
     *  @since	5.0.0
     *
-    *  @param	$valid (boolean) validation status based on the value and the field's required setting
-    *  @param	$value (mixed) the $_POST value
-    *  @param	$field (array) the field array holding all the field options
-    *  @param	$input (string) the corresponding input name for $_POST value
-    *  @return	$valid
+    *  @param	bool $valid validation status based on the value and the field's required setting
+    *  @param	mixed $value the $_POST value
+    *  @param	arrat $field the field array holding all the field options
+    *  @param	string $input the corresponding input name for $_POST value
+    *  @return	bool
     */
     public function validate_value($valid, $value, $field, $input)
     {
@@ -578,9 +567,8 @@ class AcfUppyFieldV5 extends \acf_field
     *  @date	6/03/2014
     *  @since	5.0.0
     *
-    *  @param	$post_id (mixed) the $post_id from which the value was deleted
-    *  @param	$key (string) the $meta_key which the value was deleted
-    *  @return	n/a
+    *  @param	mixed $post_id the $post_id from which the value was deleted
+    *  @param	string $key the $meta_key which the value was deleted
     */
     /*
     public function delete_value( $post_id, $key )
@@ -598,8 +586,8 @@ class AcfUppyFieldV5 extends \acf_field
     *  @date	23/01/2013
     *  @since	3.6.0
     *
-    *  @param	$field (array) the field array holding all the field options
-    *  @return	$field
+    *  @param	array $field the field array holding all the field options
+    *  @return	mixed
     */
     /*
     public function load_field( $field )
@@ -617,8 +605,8 @@ class AcfUppyFieldV5 extends \acf_field
     *  @date	23/01/2013
     *  @since	3.6.0
     *
-    *  @param	$field (array) the field array holding all the field options
-    *  @return	$field
+    *  @param	array $field the field array holding all the field options
+    *  @return	array
     */
     /*
     public function update_field( $field )
@@ -636,8 +624,7 @@ class AcfUppyFieldV5 extends \acf_field
     *  @date	11/02/2014
     *  @since	5.0.0
     *
-    *  @param	$field (array) the field array holding all the field options
-    *  @return	n/a
+    *  @param	array $field the field array holding all the field options
     */
     /*
     public function delete_field( $field )
