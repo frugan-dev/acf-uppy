@@ -42,7 +42,7 @@ class UploadDir implements TusMiddleware
     /**
      * @throws \Exception
      */
-    public function handle(Request $request, Response $response)
+    public function handle(Request $request, Response $response): void
     {
         if ($request->method() !== 'GET') {
             $fieldName = $request->header('Field-Name');

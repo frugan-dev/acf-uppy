@@ -13,7 +13,7 @@ https://stackoverflow.com/a/29842302/3929620
 
 ### Requirements
 
-- PHP v7.x
+- PHP v7.1 or upper
 - WordPress v5.x
 - [Advanced Custom Fields](https://www.advancedcustomfields.com) v5.x
 

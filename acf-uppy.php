@@ -5,7 +5,7 @@
  * Plugin URI: https://github.com/frugan-it/acf-uppy
  * Description: Uppy Field for Advanced Custom Fields
  * Version: 0.1.0
- * Requires PHP: 5.6
+ * Requires PHP: 7.1
  * Author: Frugan
  * Author URI: https://about.me/frugan
  * License: GPLv3 or later
