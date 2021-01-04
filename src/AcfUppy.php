@@ -198,7 +198,11 @@ class AcfUppy
                                     global $wp_filesystem;
 
                                     $i=0;
-                                    foreach (glob(trailingslashit($this->settings['symlinkPath']).'*') as $path) {
+                                    $paths = glob(trailingslashit($this->settings['symlinkPath']).'*');
+                                    if(false === $paths){
+                                        return;
+                                    }
+                                    foreach ($paths as $path) {
                                         if (is_dir($path)) {
                                             if (basename($path) === $wp->query_vars[ACF_UPPY_NAME_UNDERSCORE . '_pubkey']) {
                                                 continue;
@@ -207,7 +211,7 @@ class AcfUppy
                                             //https://stackoverflow.com/a/34512584
                                             $stat = stat($path);
 
-                                            if (isset($stat['mtime'])) {
+                                            if (false !== $stat && isset($stat['mtime'])) {
                                                 $diff = ((time() - $stat['mtime']) / (60 * 60 * 24));
 
                                                 if ($diff >= apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/'.$wp->query_vars[ACF_UPPY_NAME_UNDERSCORE . '_action'].'_symlink_delete_days', 1)) {
