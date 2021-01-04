@@ -32,15 +32,6 @@ jobs:
       if: steps.composer-cache.outputs.cache-hit != 'true'
       run: composer install --prefer-dist --no-progress --no-suggest
 
-    - name: Cache Composer packages
-      id: composer-cache
-      uses: actions/cache@v2
-      with:
-        path: vendor
-        key: ${{ runner.os }}-test-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-test-
-
     - name: Run php-cs-fixer
       run: vendor/bin/php-cs-fixer fix --dry-run
 
