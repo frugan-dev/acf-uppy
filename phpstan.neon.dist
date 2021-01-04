@@ -2,10 +2,10 @@ includes:
     - vendor/szepeviktor/phpstan-wordpress/extension.neon
 parameters:
     level: max
-    excludes_analyse:
-        - build/*
-        - symlink/*
-        - vendor/*
+    scanFiles:
+        - acf-uppy.php
+    bootstrapFiles:
+        - stubs/constants.stub
     paths:
-        - %currentWorkingDirectory%/src/
+        - src/
 
