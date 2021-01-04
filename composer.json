@@ -21,6 +21,7 @@
         "nikic/php-parser": "^4.10",
         "phpro/grumphp": "^0.19.1",
         "phpstan/phpstan": "^0.12.64",
-        "sensiolabs/security-checker": "^6.0"
+        "sensiolabs/security-checker": "^6.0",
+        "szepeviktor/phpstan-wordpress": "^0.7.2"
     }
 }
