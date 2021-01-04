@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-/*
+/**
  * This file is part of the ACF Uppy Field WordPress plugin.
  *
  * (ɔ) Frugan <dev@frugan.it>
@@ -27,7 +27,7 @@ class AcfUppy
      */
     public $server;
 
-    /*
+    /**
     *  __construct
     *
     *  This function will setup the class functionality
@@ -362,7 +362,7 @@ class AcfUppy
                             $query->the_post();
 
                             $destPath = !empty($field['destPath']) ? trailingslashit($field['destPath']) : apply_filters(ACF_UPPY_NAME_UNDERSCORE . '/dest_path/type=' . get_post_type(), trailingslashit($this->settings['destPath']), get_the_ID(), $field);
-                            $destPath .= trailingslashit(get_the_ID()) . trailingslashit(sanitize_file_name($field['key']));
+                            $destPath .= trailingslashit((string)get_the_ID()) . trailingslashit(sanitize_file_name($field['key']));
 
                             if (is_dir($destPath)) {
                                 @$wp_filesystem->rmdir($destPath, true);
@@ -399,7 +399,7 @@ class AcfUppy
         add_action('acf/register_fields', array($this, 'include_field')); // v4
     }
 
-    /*
+    /**
     *  include_field
     *
     *  This function will include the field type class
