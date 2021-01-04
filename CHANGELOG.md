@@ -2,13 +2,13 @@
 
 ### Commits
 
-- Added delete_field() hook [`7b6db33`](https://github.com/frugan-it/acf-uppy/commit/7b6db3392ccfd36b79f6f9360f4ba7040dfe137b)
+- Fixed destPath in AcfUppy getDestFiles() and getDestPaths() methods [`30b3ee6`](https://github.com/frugan-it/acf-uppy/commit/30b3ee65fe8f924f3dfe0e4302ea6954a55a673f)
 
 ## v0.1.0 - 2021-01-03
 
 ### Commits
 
-- Initial commit [`4bb98ab`](https://github.com/frugan-it/acf-uppy/commit/4bb98ab5dc2f1fa975b04415e10f70cd6422d1cf)
+- Initial commit [`e62cdd5`](https://github.com/frugan-it/acf-uppy/commit/e62cdd555efe2fca843d1f746a11f45d698098ef)
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).

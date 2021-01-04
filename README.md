@@ -3,7 +3,7 @@
 # ACF Uppy Field (WordPress Plugin)
 
 _ACF Uppy Field_ is a WordPress plugin that adds a new "Uppy" custom field to the list of fields of the [Advanced Custom Fields](https://www.advancedcustomfields.com) plugin.  
-This "Uppy" custom field allows you to overcome the limits of the default "File" field present in ACF, and to __upload files of all types and sizes__ via the [TUS protocol](https://tus.io) and the [Uppy JS uploader](https://uppy.io), regardless of the limits set on the server side (there is no need to increase the parameters _upload_max_filesize_, _post_max_size_, _max_execution_time_, _memory_limit_, etc.).
+This "Uppy" custom field allows you to overcome the limits of the default "File" field present in ACF, and to __upload files of all types and sizes__ via the [TUS protocol](https://tus.io) and the [Uppy JS uploader](https://uppy.io), regardless of the limits set on the server side (there is no need to increase INI parameters like _upload_max_filesize_, _post_max_size_, _max_execution_time_, _memory_limit_, etc.).
 
 <!-- 
 https://stackoverflow.com/a/46701929/3929620
@@ -33,7 +33,7 @@ https://stackoverflow.com/a/29842302/3929620
 - no limits by default for upload file size and types
 - support setting per-field size limit, mime-types and upload path
 - support uploads outside public directory (for private files)
-- download file using symlinks (no memory problem with large download)
+- download file using symlinks (no memory problems with large downloads)
 - many WP hooks available
 
 ### Installation
@@ -83,7 +83,7 @@ Default: `{ABSPATH}wp-content/uploads/acf-uppy`.
 apply_filters( 'acf_uppy/tmp_path', $tmpPath );
 ```
 - `$tmpPath` _(string)_: The file temporary absolute path.  
-Default: `{sys_get_temp_dir()}/acf-uppy/{user_id}`.
+Default: `{sys_get_temp_dir()}/acf-uppy/{get_current_user_id()}`.
 
 ```php
 apply_filters( 'acf_uppy/symlink_url', $symlinkUrl );

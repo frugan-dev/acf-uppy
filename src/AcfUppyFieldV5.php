@@ -151,7 +151,7 @@ class AcfUppyFieldV5 extends \acf_field
         global $post;
 
         if (!empty($field['value'])) {
-            $destPath = !empty($field['destPath']) ? trailingslashit($field['destPath']) : trailingslashit($this->settings['destPath']);
+            $destPath = !empty($field['destPath']) ? trailingslashit($field['destPath']) : apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/dest_path/type='.$post->post_type, trailingslashit($this->settings['destPath']), $post->ID, $field);
             $destPath .= trailingslashit($post->ID) . trailingslashit(sanitize_file_name($field['key']));
 
             $destFile = $destPath . $field['value'];
@@ -187,7 +187,7 @@ class AcfUppyFieldV5 extends \acf_field
         ) ?>"><?php esc_html_e($field['value']) ?></a> (<?php echo size_format(filesize($destFile), 2) ?>)
             <?php } ?>
         </div>
-		<?php
+        <?php
     }
 
     /*
@@ -466,10 +466,6 @@ class AcfUppyFieldV5 extends \acf_field
                     }
                 }
             }
-        } else {
-
-            // trigger to delete_value()
-            $value = false;
         }
 
         return $value;

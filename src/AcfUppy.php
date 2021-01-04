@@ -231,6 +231,7 @@ class AcfUppy
                                         exit;
                                     }
 
+                                    //https://stackoverflow.com/a/1395173/3929620
                                     //https://zinoui.com/blog/download-large-files-with-php
                                     $fileDownload = FileDownload::createFromFilePath($destFile);
                                     $fileDownload->sendDownload(basename($destFile));
@@ -426,9 +427,11 @@ class AcfUppy
     public function getDestFiles(array $fieldsObj, int $postId, array $values = array(), array $returns = array())
     {
         if (!empty($fieldsObj)) {
+            $postType = get_post_type($postId);
+
             foreach ($fieldsObj as $field) {
                 if ($field['type'] === $this->settings['fieldType']) {
-                    $destPath = !empty($field['destPath']) ? trailingslashit($field['destPath']) : trailingslashit($this->settings['destPath']);
+                    $destPath = !empty($field['destPath']) ? trailingslashit($field['destPath']) : apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/dest_path/type='.$postType, trailingslashit($this->settings['destPath']), $postId, $field);
                     $destPath .= trailingslashit($postId);
                     $destPath .= trailingslashit(sanitize_file_name($field['key']));
 
@@ -455,9 +458,11 @@ class AcfUppy
     public function getDestPaths(array $fieldsObj, int $postId, $fullPath = true, array $returns = array())
     {
         if (!empty($fieldsObj)) {
+            $postType = get_post_type($postId);
+
             foreach ($fieldsObj as $field) {
                 if ($field['type'] === $this->settings['fieldType']) {
-                    $destPath = !empty($field['destPath']) ? trailingslashit($field['destPath']) : trailingslashit($this->settings['destPath']);
+                    $destPath = !empty($field['destPath']) ? trailingslashit($field['destPath']) : apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/dest_path/type='.$postType, trailingslashit($this->settings['destPath']), $postId, $field);
                     $destPath .= trailingslashit($postId);
 
                     if ($fullPath) {
