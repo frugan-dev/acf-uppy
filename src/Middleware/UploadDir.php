@@ -14,24 +14,39 @@ namespace AcfUppy\Middleware;
 use TusPhp\Request;
 use TusPhp\Response;
 use TusPhp\Middleware\TusMiddleware;
+use TusPhp\Tus\Server;
 
 class UploadDir implements TusMiddleware
 {
+    /**
+     * @var array{version:string,fieldType:string,url:string,path:string,destPath:string,tmpPath:string,symlinkUrl:string,symlinkPath:string,cacheTtl:string}
+     */
     public $settings;
+
+    /**
+     * @var Server
+     */
     public $server;
 
+    /**
+     * @param array{version:string,fieldType:string,url:string,path:string,destPath:string,tmpPath:string,symlinkUrl:string,symlinkPath:string,cacheTtl:string} $settings
+     */
     public function __construct(
-        $settings,
-        $server
+        array $settings,
+        Server $server
     ) {
         $this->settings = $settings;
         $this->server = $server;
     }
 
-    public function handle(Request $request, Response $response): void
+    /**
+     * @throws \Exception
+     */
+    public function handle(Request $request, Response $response)
     {
         if ($request->method() !== 'GET') {
-            if (empty($fieldName = $request->header('Field-Name'))) {
+            $fieldName = $request->header('Field-Name');
+            if (null === $fieldName) {
                 throw new \Exception(__('Wrong headers', ACF_UPPY_NAME));
             }
 
