@@ -460,7 +460,7 @@ class AcfUppy
             foreach ($fieldsObj as $field) {
                 if ($field['type'] === $this->settings['fieldType']) {
                     $destPath = !empty($field['destPath']) ? trailingslashit($field['destPath']) : apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/dest_path/type='.$postType, trailingslashit($this->settings['destPath']), $postId, $field);
-                    $destPath .= trailingslashit($postId);
+                    $destPath .= trailingslashit((string)$postId);
                     $destPath .= trailingslashit(sanitize_file_name($field['key']));
 
                     if (!empty($field['value'])) {
@@ -483,7 +483,7 @@ class AcfUppy
         return $returns;
     }
 
-    public function getDestPaths(array $fieldsObj, int $postId, $fullPath = true, array $returns = array()): array
+    public function getDestPaths(array $fieldsObj, int $postId, bool $fullPath = true, array $returns = array()): array
     {
         if (!empty($fieldsObj)) {
             $postType = get_post_type($postId);
@@ -491,7 +491,7 @@ class AcfUppy
             foreach ($fieldsObj as $field) {
                 if ($field['type'] === $this->settings['fieldType']) {
                     $destPath = !empty($field['destPath']) ? trailingslashit($field['destPath']) : apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/dest_path/type='.$postType, trailingslashit($this->settings['destPath']), $postId, $field);
-                    $destPath .= trailingslashit($postId);
+                    $destPath .= trailingslashit((int)$postId);
 
                     if ($fullPath) {
                         $destPath .= trailingslashit(sanitize_file_name($field['key']));
