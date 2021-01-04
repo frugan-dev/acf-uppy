@@ -83,7 +83,12 @@ class AcfUppy
                 $fileMeta = $event->getFile()->details();
                 $fieldName = basename(dirname($fileMeta['file_path']));
 
-                foreach (glob(trailingslashit($this->server->getUploadDir()) . '*') as $path) {
+                $dirs = glob(trailingslashit($this->server->getUploadDir()) . '*');
+                if(false === $dirs){
+                    return;
+                }
+
+                foreach ($dirs as $path) {
                     if ($fileMeta['file_path'] === $path) {
                         continue;
                     }
