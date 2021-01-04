@@ -100,18 +100,20 @@ class AcfUppy
 
                 $requestKey = $event->getRequest()->key();
 
-                //https://github.com/ankitpokhrel/tus-php/issues/102
-                $cacheKeys = $this->server->getCache()->keys();
-                //$this->server->getCache()->deleteAll( $cacheKeys );
+                $cache = $this->server->getCache();
+                if(!method_exists($cache, 'getActualCacheKey')){
+                    return;
+                }
 
-                foreach ($cacheKeys as $cacheKey) {
-                    if ($this->server->getCache()->getActualCacheKey($requestKey) === $cacheKey) {
+                //https://github.com/ankitpokhrel/tus-php/issues/102
+                foreach ($cache->keys() as $cacheKey) {
+                    if ($cache->getActualCacheKey($requestKey) === $cacheKey) {
                         continue;
                     }
 
-                    if ($oldFileMeta = $this->server->getCache()->get($cacheKey)) {
+                    if ($oldFileMeta = $cache->get($cacheKey)) {
                         if (preg_match('~'.preg_quote('/'.get_current_user_id().'/'.$fieldName.'/').'~', $oldFileMeta['file_path'])) {
-                            $this->server->getCache()->delete($cacheKey);
+                            $cache->delete($cacheKey);
                         }
                     }
                 }
