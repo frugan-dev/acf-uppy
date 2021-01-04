@@ -175,7 +175,7 @@ class AcfUppyFieldV5 extends \acf_field
         if (!empty($field['allowedFileTypes'])) {
             $array = preg_split('/\r\n|[\r\n]/', $field['allowedFileTypes']);
 
-            if(false !== $array){
+            if (false !== $array) {
                 //http://stackoverflow.com/a/8321709
                 $array = array_flip(array_flip($array));
 
@@ -217,7 +217,7 @@ class AcfUppyFieldV5 extends \acf_field
     {
         // register & include JS
         $paths = glob($this->settings['path'].'/assets/js'.(!empty(WP_DEBUG) ? '' : '/min').'/npm/*.js');
-        if(false !== $paths) {
+        if (false !== $paths) {
             foreach ($paths as $file) {
                 wp_register_script(
                     $this->name . '-npm-' . basename($file, '.js'),
@@ -231,7 +231,7 @@ class AcfUppyFieldV5 extends \acf_field
         }
 
         $paths = glob($this->settings['path'].'/assets/js'.(!empty(WP_DEBUG) ? '' : '/min').'/*.js');
-        if(false !== $paths) {
+        if (false !== $paths) {
             foreach ($paths as $file) {
                 wp_register_script(
                     $this->name . '-' . basename($file, '.js'),
@@ -272,7 +272,7 @@ class AcfUppyFieldV5 extends \acf_field
 
         // register & include CSS
         $paths = glob($this->settings['path'].'/assets/css'.(!empty(WP_DEBUG) ? '' : '/min').'/npm/*.css');
-        if(false !== $paths) {
+        if (false !== $paths) {
             foreach ($paths as $file) {
                 wp_register_style(
                     $this->name . '-npm-' . basename($file, '.css'),
@@ -285,7 +285,7 @@ class AcfUppyFieldV5 extends \acf_field
         }
 
         $paths = glob($this->settings['path'].'/assets/css'.(!empty(WP_DEBUG) ? '' : '/min').'/*.css');
-        if(false !== $paths) {
+        if (false !== $paths) {
             foreach ($paths as $file) {
                 wp_register_style(
                     $this->name . '-' . basename($file, '.css'),
@@ -367,7 +367,6 @@ class AcfUppyFieldV5 extends \acf_field
         return $value;
     }
 
-
     /**
     *  validate_value()
     *
@@ -417,13 +416,17 @@ class AcfUppyFieldV5 extends \acf_field
 
                 $counter = 0;
                 while (file_exists($destPath . $value)) {
-                    $value = apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/file_name_exists',
+                    $value = apply_filters(
+                        ACF_UPPY_NAME_UNDERSCORE.'/file_name_exists',
                         $pathinfo['filename'] .
                         '-' .
                         ++$counter .
                         /** @phpstan-ignore-next-line */
-                        isset($pathinfo['extension']) ? '.' . $pathinfo['extension'] : ''
-                        , $destPath, $pathinfo, $counter);
+                        isset($pathinfo['extension']) ? '.' . $pathinfo['extension'] : '',
+                        $destPath,
+                        $pathinfo,
+                        $counter
+                    );
                 }
             }
 
@@ -434,5 +437,4 @@ class AcfUppyFieldV5 extends \acf_field
 
         return $valid;
     }
-
 }

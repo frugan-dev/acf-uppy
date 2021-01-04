@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-/**
+/*
  * This file is part of the ACF Uppy Field WordPress plugin.
  *
  * (ɔ) Frugan <dev@frugan.it>
@@ -69,7 +69,7 @@ class AcfUppy
 
             //https://github.com/ankitpokhrel/tus-php/issues/102
             $cache = $this->server->getCache();
-            if($cache instanceof AbstractCache){
+            if ($cache instanceof AbstractCache) {
                 $cache->setTtl($this->settings['cacheTtl']);
             }
 
@@ -84,7 +84,7 @@ class AcfUppy
                 $fieldName = basename(dirname($fileMeta['file_path']));
 
                 $dirs = glob(trailingslashit($this->server->getUploadDir()) . '*');
-                if(false === $dirs){
+                if (false === $dirs) {
                     return;
                 }
 
@@ -101,7 +101,7 @@ class AcfUppy
                 $requestKey = $event->getRequest()->key();
 
                 $cache = $this->server->getCache();
-                if(!method_exists($cache, 'getActualCacheKey')){
+                if (!method_exists($cache, 'getActualCacheKey')) {
                     return;
                 }
 
@@ -199,7 +199,7 @@ class AcfUppy
 
                                     $i=0;
                                     $paths = glob(trailingslashit($this->settings['symlinkPath']).'*');
-                                    if(false === $paths){
+                                    if (false === $paths) {
                                         return;
                                     }
                                     foreach ($paths as $path) {
@@ -283,7 +283,7 @@ class AcfUppy
                 global $wp_filesystem;
 
                 $paths = glob(trailingslashit($this->settings['tmpPath']) . '*');
-                if(false !== $paths){
+                if (false !== $paths) {
                     foreach ($paths as $path) {
                         if (is_dir($path)) {
                             @$wp_filesystem->rmdir($path, true);
@@ -317,7 +317,7 @@ class AcfUppy
                     foreach ($destPaths as $destPath) {
                         if (is_dir($destPath)) {
                             $paths = glob(trailingslashit($destPath) . '*');
-                            if(false === $paths){
+                            if (false === $paths) {
                                 continue;
                             }
                             foreach ($paths as $path) {
