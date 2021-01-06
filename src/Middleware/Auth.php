@@ -17,6 +17,9 @@ use TusPhp\Middleware\TusMiddleware;
 
 class Auth implements TusMiddleware
 {
+    /**
+     * @throws \Exception
+     */
     public function handle(Request $request, Response $response): void
     {
         if (!is_user_logged_in()) {

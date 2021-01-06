@@ -2,6 +2,7 @@
 
 namespace AcfUppy;
 
+use AcfUppy\Exception\ReadErrorException;
 use TusPhp\Tus\Server;
 
 class AcfUppyFieldV5 extends \acf_field
@@ -212,41 +213,44 @@ class AcfUppyFieldV5 extends \acf_field
     *  @type	action (admin_enqueue_scripts)
     *  @since	3.6
     *  @date	23/01/13
+     * @throws ReadErrorException
     */
     public function input_admin_enqueue_scripts(): void
     {
         // register & include JS
         $paths = glob($this->settings['path'].'/assets/js'.(!empty(WP_DEBUG) ? '' : '/min').'/npm/*.js');
-        if (false !== $paths) {
-            foreach ($paths as $file) {
-                wp_register_script(
-                    $this->name . '-npm-' . basename($file, '.js'),
-                    $this->settings['url'] . 'assets/js' . (!empty(WP_DEBUG) ? '' : '/min') . '/npm/' . basename($file),
-                    array('acf-input'),
-                    $this->settings['version'],
-                    true
-                );
-                wp_enqueue_script($this->name . '-npm-' . basename($file, '.js'));
-            }
+        if (false === $paths) {
+            throw new ReadErrorException('error reading ' . $this->settings['path'] . '/assets/js' . (!empty(WP_DEBUG) ? '' : '/min') . '/npm/*.js');
+        }
+        foreach ($paths as $file) {
+            wp_register_script(
+                $this->name . '-npm-' . basename($file, '.js'),
+                $this->settings['url'] . 'assets/js' . (!empty(WP_DEBUG) ? '' : '/min') . '/npm/' . basename($file),
+                array('acf-input'),
+                $this->settings['version'],
+                true
+            );
+            wp_enqueue_script($this->name . '-npm-' . basename($file, '.js'));
         }
 
         $paths = glob($this->settings['path'].'/assets/js'.(!empty(WP_DEBUG) ? '' : '/min').'/*.js');
-        if (false !== $paths) {
-            foreach ($paths as $file) {
-                wp_register_script(
-                    $this->name . '-' . basename($file, '.js'),
-                    $this->settings['url'] . 'assets/js' . (!empty(WP_DEBUG) ? '' : '/min') . '/' . basename($file),
-                    array('acf-input'),
-                    $this->settings['version'],
-                    true
-                );
+        if (false === $paths) {
+            throw new ReadErrorException('error reading ' . $this->settings['path'] . '/assets/js' . (!empty(WP_DEBUG) ? '' : '/min') . '/*.js');
+        }
+        foreach ($paths as $file) {
+            wp_register_script(
+                $this->name . '-' . basename($file, '.js'),
+                $this->settings['url'] . 'assets/js' . (!empty(WP_DEBUG) ? '' : '/min') . '/' . basename($file),
+                array('acf-input'),
+                $this->settings['version'],
+                true
+            );
 
-                if (basename($file, '.js') === 'main') {
-                    wp_localize_script($this->name . '-' . basename($file, '.js'), $this->name . 'L10n', $this->l10n);
-                }
-
-                wp_enqueue_script($this->name . '-' . basename($file, '.js'));
+            if (basename($file, '.js') === 'main') {
+                wp_localize_script($this->name . '-' . basename($file, '.js'), $this->name . 'L10n', $this->l10n);
             }
+
+            wp_enqueue_script($this->name . '-' . basename($file, '.js'));
         }
 
         $files = array(
@@ -272,29 +276,31 @@ class AcfUppyFieldV5 extends \acf_field
 
         // register & include CSS
         $paths = glob($this->settings['path'].'/assets/css'.(!empty(WP_DEBUG) ? '' : '/min').'/npm/*.css');
-        if (false !== $paths) {
-            foreach ($paths as $file) {
-                wp_register_style(
-                    $this->name . '-npm-' . basename($file, '.css'),
-                    $this->settings['url'] . 'assets/css' . (!empty(WP_DEBUG) ? '' : '/min') . '/npm/' . basename($file),
-                    array('acf-input'),
-                    $this->settings['version']
-                );
-                wp_enqueue_style($this->name . '-npm-' . basename($file, '.css'));
-            }
+        if (false === $paths) {
+            throw new ReadErrorException('error reading ' . $this->settings['path'].'/assets/css'.(!empty(WP_DEBUG) ? '' : '/min').'/npm/*.css');
+        }
+        foreach ($paths as $file) {
+            wp_register_style(
+                $this->name . '-npm-' . basename($file, '.css'),
+                $this->settings['url'] . 'assets/css' . (!empty(WP_DEBUG) ? '' : '/min') . '/npm/' . basename($file),
+                array('acf-input'),
+                $this->settings['version']
+            );
+            wp_enqueue_style($this->name . '-npm-' . basename($file, '.css'));
         }
 
         $paths = glob($this->settings['path'].'/assets/css'.(!empty(WP_DEBUG) ? '' : '/min').'/*.css');
-        if (false !== $paths) {
-            foreach ($paths as $file) {
-                wp_register_style(
-                    $this->name . '-' . basename($file, '.css'),
-                    $this->settings['url'] . 'assets/css' . (!empty(WP_DEBUG) ? '' : '/min') . '/' . basename($file),
-                    array('acf-input'),
-                    $this->settings['version']
-                );
-                wp_enqueue_style($this->name . '-' . basename($file, '.css'));
-            }
+        if (false === $paths) {
+            throw new ReadErrorException($this->settings['path'].'/assets/css'.(!empty(WP_DEBUG) ? '' : '/min').'/*.css');
+        }
+        foreach ($paths as $file) {
+            wp_register_style(
+                $this->name . '-' . basename($file, '.css'),
+                $this->settings['url'] . 'assets/css' . (!empty(WP_DEBUG) ? '' : '/min') . '/' . basename($file),
+                array('acf-input'),
+                $this->settings['version']
+            );
+            wp_enqueue_style($this->name . '-' . basename($file, '.css'));
         }
     }
 

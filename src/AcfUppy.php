@@ -11,6 +11,7 @@
 
 namespace AcfUppy;
 
+use AcfUppy\Exception\ReadErrorException;
 use Apfelbox\FileDownload\FileDownload;
 use TusPhp\Cache\AbstractCache;
 use TusPhp\Tus\Server;
@@ -28,14 +29,16 @@ class AcfUppy
     public $server;
 
     /**
-    *  __construct
-    *
-    *  This function will setup the class functionality
-    *
-    *  @type	function
-    *  @date	17/02/2016
-    *  @since	1.0.0
-    */
+     *  __construct
+     *
+     *  This function will setup the class functionality
+     *
+     * @type    function
+     * @date    17/02/2016
+     * @throws ReadErrorException
+     * @throws \ReflectionException
+     * @since    1.0.0
+     */
     public function __construct()
     {
         add_action('plugins_loaded', function (): void {
@@ -85,7 +88,7 @@ class AcfUppy
 
                 $dirs = glob(trailingslashit($this->server->getUploadDir()) . '*');
                 if (false === $dirs) {
-                    return;
+                    throw new ReadErrorException('error reading ' . trailingslashit($this->server->getUploadDir()) . '*');
                 }
 
                 foreach ($dirs as $path) {
@@ -200,7 +203,7 @@ class AcfUppy
                                     $i=0;
                                     $paths = glob(trailingslashit($this->settings['symlinkPath']).'*');
                                     if (false === $paths) {
-                                        return;
+                                        throw new ReadErrorException('error reading ' . trailingslashit($this->settings['symlinkPath']).'*');
                                     }
                                     foreach ($paths as $path) {
                                         if (is_dir($path)) {
@@ -283,11 +286,12 @@ class AcfUppy
                 global $wp_filesystem;
 
                 $paths = glob(trailingslashit($this->settings['tmpPath']) . '*');
-                if (false !== $paths) {
-                    foreach ($paths as $path) {
-                        if (is_dir($path)) {
-                            @$wp_filesystem->rmdir($path, true);
-                        }
+                if (false === $paths) {
+                    throw new ReadErrorException('error reading ' . trailingslashit($this->settings['tmpPath']) . '*');
+                }
+                foreach ($paths as $path) {
+                    if (is_dir($path)) {
+                        @$wp_filesystem->rmdir($path, true);
                     }
                 }
             }
@@ -318,7 +322,7 @@ class AcfUppy
                         if (is_dir($destPath)) {
                             $paths = glob(trailingslashit($destPath) . '*');
                             if (false === $paths) {
-                                continue;
+                                throw new ReadErrorException('error reading ' . trailingslashit($destPath) . '*');
                             }
                             foreach ($paths as $path) {
                                 if (is_file($path)) {
