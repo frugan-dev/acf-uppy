@@ -170,6 +170,9 @@ class AcfUppyFieldV5 extends \acf_field
 
             if (file_exists($destFile)) {
                 $found = true;
+
+                $hash = apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/download_hash', wp_hash($destFile), $destFile, $post->ID);
+                $hash = apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/download_hash/type='.$post->post_type, $hash, $destFile, $post->ID);
             }
         }
 
@@ -197,7 +200,7 @@ class AcfUppyFieldV5 extends \acf_field
                     <span class="dashicons dashicons-trash"></span>
                 </a>
                 <a href="<?php echo esc_url(
-            site_url('/' . apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/base_path', ACF_UPPY_NAME) . '/download/' . trailingslashit($post->ID) . trailingslashit(wp_hash($destFile)))
+            site_url('/' . apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/base_path', ACF_UPPY_NAME) . '/download/' . trailingslashit($post->ID) . trailingslashit($hash))
         ) ?>"><?php esc_html_e($field['value']) ?></a> (<?php echo size_format((int)filesize($destFile), 2) ?>)
             <?php } ?>
         </div>
