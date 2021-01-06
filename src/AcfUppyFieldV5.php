@@ -161,6 +161,7 @@ class AcfUppyFieldV5 extends \acf_field
         global $post;
 
         $destFile = '';
+        $hash = '';
 
         if (!empty($field['value'])) {
             $destPath = !empty($field['destPath']) ? trailingslashit($field['destPath']) : apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/dest_path/type='.$post->post_type, trailingslashit($this->settings['destPath']), $post->ID, $field);
