@@ -9,9 +9,11 @@
 - insert phpstan path and require phpstan-wordpress [`93edc67`](https://github.com/frugan-it/acf-uppy/commit/93edc679764912e2c3e4b5c4ae2cf1d0b49f07cc)
 - static tests and release in ci [`43a51a3`](https://github.com/frugan-it/acf-uppy/commit/43a51a3f69390baea9b4f4ff0c3829c36c8995ce)
 - Fixed destPath in AcfUppy getDestFiles() and getDestPaths() methods Updated README [`f55480c`](https://github.com/frugan-it/acf-uppy/commit/f55480c2f9f018c7c250727e1e11a3b55ee991e3)
+- Applied hook filters to $hash in AcfUppyFieldV5.php [`c6cc4d7`](https://github.com/frugan-it/acf-uppy/commit/c6cc4d70cbeec959fd735769031f18684f91fd08)
 - remove double composer cache [`0b3d251`](https://github.com/frugan-it/acf-uppy/commit/0b3d251e8c13893c532432ac1ed0ca4b02859b1a)
 - there's no really need to build in another step [`5a495f8`](https://github.com/frugan-it/acf-uppy/commit/5a495f86674ca42c48dc3902770ad2a12beaf548)
-- Applied hook filters to $hash in AcfUppyFieldV5.php [`9d3919e`](https://github.com/frugan-it/acf-uppy/commit/9d3919e6c7ba5820c02b28de358c5caf5df42d6c)
+- Fixed home_url() https://github.com/frugan-it/acf-uppy/issues/3 [`34b9375`](https://github.com/frugan-it/acf-uppy/commit/34b9375c423dd8aebf7bf8f1b08a6f8f73b0b052)
+- Updated README [`b0b0f3c`](https://github.com/frugan-it/acf-uppy/commit/b0b0f3c7d881db33622eebc206129c43a9dd86a7)
 - tests in all branches really [`26122a6`](https://github.com/frugan-it/acf-uppy/commit/26122a6a654d0ab9ff775f14828b3a0a1beed57f)
 - tests in all branches [`ff8c22f`](https://github.com/frugan-it/acf-uppy/commit/ff8c22f04ea053b8a51e7a9443b45b531c9465cd)
 

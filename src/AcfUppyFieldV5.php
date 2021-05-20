@@ -62,7 +62,7 @@ class AcfUppyFieldV5 extends \acf_field
         $this->l10n = array(
             'debug' => WP_DEBUG,
             'locale' => get_locale(),
-            'apiPath' => site_url('/' . apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/api_path', 'wp-tus')),
+            'apiPath' => home_url('/' . apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/api_path', 'wp-tus')),
             //'error'	=> __('Error! Please enter a higher value', ACF_UPPY_NAME),
         );
 
@@ -186,7 +186,7 @@ class AcfUppyFieldV5 extends \acf_field
                     <span class="dashicons dashicons-trash"></span>
                 </a>
                 <a href="<?php echo esc_url(
-            site_url('/' . apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/base_path', ACF_UPPY_NAME) . '/download/' . trailingslashit($post->ID) . trailingslashit($hash))
+            home_url('/' . apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/base_path', ACF_UPPY_NAME) . '/download/' . trailingslashit($post->ID) . trailingslashit($hash))
         ) ?>"><?php esc_html_e($field['value']) ?></a> (<?php echo size_format(filesize($destFile), 2) ?>)
             <?php } ?>
         </div>
