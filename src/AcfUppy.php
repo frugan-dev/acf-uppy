@@ -424,10 +424,14 @@ class AcfUppy
         return $returns;
     }
 
-    public function getDestFiles(array $fieldsObj, int $postId, array $values = array(), array $returns = array())
+    public function getDestFiles(array $fieldsObj, $postId, array $values = array(), array $returns = array())
     {
         if (!empty($fieldsObj)) {
-            $postType = get_post_type($postId);
+            if (str_contains((string) $postId, 'user_')) {
+                $postType = 'user';
+            } else {
+                $postType = get_post_type($postId);
+            }
 
             foreach ($fieldsObj as $field) {
                 if ($field['type'] === $this->settings['fieldType']) {
@@ -455,10 +459,14 @@ class AcfUppy
         return $returns;
     }
 
-    public function getDestPaths(array $fieldsObj, int $postId, $fullPath = true, array $returns = array())
+    public function getDestPaths(array $fieldsObj, $postId, $fullPath = true, array $returns = array())
     {
         if (!empty($fieldsObj)) {
-            $postType = get_post_type($postId);
+            if (str_contains((string) $postId, 'user_')) {
+                $postType = 'user';
+            } else {
+                $postType = get_post_type($postId);
+            }
 
             foreach ($fieldsObj as $field) {
                 if ($field['type'] === $this->settings['fieldType']) {
