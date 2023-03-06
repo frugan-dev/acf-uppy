@@ -5,7 +5,10 @@
     "license": "GPL-3.0-or-later",
     "config": {
         "optimize-autoloader": true,
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "phpro/grumphp": true
+        }
     },
     "autoload": {
         "psr-4": {
@@ -13,15 +16,16 @@
         }
     },
     "require": {
-        "ankitpokhrel/tus-php": "^2.1",
+        "ankitpokhrel/tus-php": "^2.3",
         "apfelbox/php-file-download": "^2.1"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.17",
-        "nikic/php-parser": "^4.10",
-        "phpro/grumphp": "^0.19.1",
-        "phpstan/phpstan": "^0.12.64",
+        "friendsofphp/php-cs-fixer": "^2.19",
+        "nikic/php-parser": "^4.15",
+        "phpro/grumphp": "^1.2",
+        "phpstan/phpstan": "^0.12.100",
         "sensiolabs/security-checker": "^6.0",
-        "szepeviktor/phpstan-wordpress": "^0.7.2"
+        "szepeviktor/phpstan-wordpress": "^0.7.7"
     }
 }
+
