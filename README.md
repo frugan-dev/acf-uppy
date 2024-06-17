@@ -1,27 +1,33 @@
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/frugan-dev/acf-uppy/total)
+![Build Status](https://github.com/frugan-dev/acf-uppy/actions/workflows/ci.yml/badge.svg)
+![Open Issues](https://img.shields.io/github/issues/frugan-dev/acf-uppy)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
+![Version](https://img.shields.io/github/v/release/frugan-dev/acf-uppy)
+![License](https://img.shields.io/github/license/frugan-dev/acf-uppy)
+<!--
+![PHP Version](https://img.shields.io/packagist/php-v/frugan-dev/acf-uppy)
+![Coverage Status](https://img.shields.io/codecov/c/github/frugan-dev/acf-uppy)
+![Code Climate](https://img.shields.io/codeclimate/maintainability/frugan-dev/acf-uppy)
+-->
 
 # ACF Uppy Field (WordPress Plugin)
 
-_ACF Uppy Field_ is a WordPress plugin that adds a new "Uppy" custom field to the list of fields of the [Advanced Custom Fields](https://www.advancedcustomfields.com) plugin.  
-This "Uppy" custom field allows you to overcome the limits of the default "File" field present in ACF, and to __upload files of all types and sizes__ via the [TUS protocol](https://tus.io) and the [Uppy JS uploader](https://uppy.io), regardless of the limits set on the server side (there is no need to increase INI parameters like _upload_max_filesize_, _post_max_size_, _max_execution_time_, _memory_limit_, etc.).
+_ACF Uppy Field_ is a WordPress plugin that adds a new `Uppy` custom field to the list of fields of the [Advanced Custom Fields](https://www.advancedcustomfields.com) plugin. This custom field allows you to __upload files of all types and sizes__ using the [TUS protocol](https://tus.io) and the [Uppy JS uploader](https://uppy.io), overcoming the limitations of the default ACF `File` field. With _ACF Uppy Field_, you no longer need to increase server-side INI parameters such as _upload_max_filesize_, _post_max_size_, _max_execution_time_ and _memory_limit_.
 
-<!-- 
-https://stackoverflow.com/a/46701929/3929620
-https://stackoverflow.com/a/29842302/3929620
- -->
-![](build/src/img/acf-uppy.gif)
+![](docs/img/demo.gif)
 
-### Requirements
+## Requirements
 
-- PHP v7.1 or upper
-- WordPress v5.x
-- [Advanced Custom Fields](https://www.advancedcustomfields.com) v5.x
+- PHP ^7.4
+- WordPress ^5.7 || ^6.0
+- [Advanced Custom Fields](https://www.advancedcustomfields.com) ^5.9 || ^6.0
+- APCu *
 
-### Recommendations
+<sub><i>
+_* Note: If your environment doesn't support APCu, you can try setting the cache to `file` with the `acf_uppy/cache` filter, although `file` is not recommended in production (see [here](https://github.com/ankitpokhrel/tus-php/issues/408#issuecomment-1250229371))._
+</i></sub>
 
-- [Composer](https://getcomposer.org/)
-
-### Features
+## Features
 
 - use official [Advanced Custom Fields - Field Type Template](https://github.com/AdvancedCustomFields/acf-field-type-template)
 - use [TUS protocol](https://tus.io)
@@ -36,25 +42,128 @@ https://stackoverflow.com/a/29842302/3929620
 - download file using symlinks (no memory problems with large downloads)
 - many WP hooks available
 
-### Installation
+## Installation
 
-1. Copy the `acf-uppy` folder into your `wp-content/plugins` or `wp-content/mu-plugins` folder.
-1. Run this command inside the `acf-uppy` folder:
-   
-   ```sh
-   $ composer install
-   ```
-   _Alternatively, if you don't have shell access to your hosting space, [read here](https://ehikioya.com/how-to-install-php-packages-without-composer/)_.
-1. Activate the `Advanced Custom Fields: Uppy` plugin via the plugins admin page.
-1. Create a new field via ACF and select the `Uppy` type.
-1. Read the description above for advanced usage instructions.
+You can install the plugin in three ways: manually, via Composer (package) or via Composer (wpackagist) _(coming soon)_.
 
-### Actions
+<details>
+<summary>Manual Installation</summary>
+
+1. Go to the [Releases](releases) section of this repository.
+2. Download the latest release zip file.
+3. Log in to your WordPress admin dashboard.
+4. Navigate to `Plugins` > `Add New`.
+5. Click `Upload Plugin`.
+6. Choose the downloaded zip file and click `Install Now`.
+
+</details>
+
+<details>
+<summary>Installation via Composer (package)</summary>
+
+If you use Composer to manage WordPress plugins, you can install it from this repository directly:
+
+1. Open your terminal.
+2. Navigate to the root directory of your WordPress installation.
+3. Ensure your `composer.json` file has the following configuration: *
+
+```json
+{
+    "require": {
+        "composer/installers": "^1.0 || ^2.0",
+        "frugan-dev/acf-uppy": "^1.0"
+    },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "frugan-dev/acf-uppy",
+                "version": "1.0.0",
+                "type": "wordpress-plugin",
+                "dist": {
+                    "url": "https://github.com/frugan-dev/acf-uppy/archive/v1.0.0.zip",
+                    "type": "zip"
+                }
+            }
+        }
+    ],
+    "extra": {
+        "installer-paths": {
+            "wp-content/plugins/{$name}/": [
+               "type:wordpress-plugin"
+            ]
+        }
+    }
+}
+```
+4. Run the following command:
+
+```sh
+composer update
+```
+
+<sub><i>
+_* Note: `composer/installers` might already be required by another dependency._
+</i></sub>
+</details>
+
+<details>
+<summary>Installation via Composer (wpackagist) (coming soon)</summary>
+
+If you use Composer to manage WordPress plugins, you can install it from (WordPress Packagist)[https://wpackagist.org]:
+
+1. Open your terminal.
+2. Navigate to the root directory of your WordPress installation.
+3. Ensure your `composer.json` file has the following configuration: *
+
+```json
+{
+    "require": {
+        "composer/installers": "^1.0 || ^2.0",
+        "wpackagist-plugin/acf-uppy": "^1.0"
+    },
+    "extra": {
+        "installer-paths": {
+            "wp-content/plugins/{$name}/": [
+               "type:wordpress-plugin"
+            ]
+        }
+    }
+}
+```
+4. Run the following command:
+
+```sh
+composer update
+```
+
+<sub><i>
+_* Note: `composer/installers` might already be required by another dependency._
+</i></sub>
+</details>
+
+## Configuration
+
+Once installed:
+
+1. In your WordPress admin dashboard, navigate to the `Plugins` section and click `Activate Plugin`.
+2. Create a new field via ACF and select the `Uppy` type.
+3. Read the description above for advanced usage instructions.
+
+## Actions
+
+<details>
+<summary>acf_uppy/download_fallback</summary>
 
 ```php
 do_action( 'acf_uppy/download_fallback', $postId );
 ```
 - `$postId` _(int)_: The ID of the post containing _ACF Uppy Field_.
+
+</details>
+
+<details>
+<summary>acf_uppy/download_fallback/type={$postType}</summary>
 
 ```php
 do_action( 'acf_uppy/download_fallback/type={$postType}', $postId );
@@ -62,13 +171,23 @@ do_action( 'acf_uppy/download_fallback/type={$postType}', $postId );
 - `$postId` _(int)_: The ID of the post containing _ACF Uppy Field_.
 - `$postType` _(string)_: The type of the post containing _ACF Uppy Field_.
 
-### Filters
+</details>
+
+## Filters
+
+<details>
+<summary>acf_uppy/dest_path</summary>
 
 ```php
 apply_filters( 'acf_uppy/dest_path', $destPath );
 ```
 - `$destPath` _(string)_: The file destination absolute base path.  
 Default: `{ABSPATH}wp-content/uploads/acf-uppy`.
+
+</details>
+
+<details>
+<summary>acf_uppy/dest_path/type={$postType}</summary>
 
 ```php
 apply_filters( 'acf_uppy/dest_path/type={$postType}', $destPath, $postId, $field );
@@ -79,11 +198,21 @@ Default: `{ABSPATH}wp-content/uploads/acf-uppy`.
 - `$postId` _(int)_: The ID of the post containing _ACF Uppy Field_.
 - `$field` _(array)_: The field array holding all the field options.
 
+</details>
+
+<details>
+<summary>acf_uppy/tmp_path</summary>
+
 ```php
 apply_filters( 'acf_uppy/tmp_path', $tmpPath );
 ```
 - `$tmpPath` _(string)_: The file temporary absolute path.  
 Default: `{sys_get_temp_dir()}/acf-uppy/{get_current_user_id()}`.
+
+</details>
+
+<details>
+<summary>acf_uppy/symlink_url</summary>
 
 ```php
 apply_filters( 'acf_uppy/symlink_url', $symlinkUrl );
@@ -91,11 +220,21 @@ apply_filters( 'acf_uppy/symlink_url', $symlinkUrl );
 - `$symlinkUrl` _(string)_: The symlinks absolute base url.  
 Default: `{site_url()}/wp-content/plugins/acf-uppy/symlink`.
 
+</details>
+
+<details>
+<summary>acf_uppy/symlink_path</summary>
+
 ```php
 apply_filters( 'acf_uppy/symlink_path', $symlinkPath );
 ```
 - `$symlinkPath` _(string)_: The symlinks absolute base path.  
 Default: `{ABSPATH}wp-content/plugins/acf-uppy/symlink`.
+
+</details>
+
+<details>
+<summary>acf_uppy/base_path</summary>
 
 ```php
 apply_filters( 'acf_uppy/base_path', $basePath );
@@ -103,24 +242,44 @@ apply_filters( 'acf_uppy/base_path', $basePath );
 - `$basePath` _(string)_: The base url endpoint.  
 Default: `acf-uppy`.
 
+</details>
+
+<details>
+<summary>acf_uppy/api_path</summary>
+
 ```php
 apply_filters( 'acf_uppy/api_path', $apiPath );
 ```
 - `$apiPath` _(string)_: The TUS base url endpoint.  
 Default: `wp-tus`.
 
+</details>
+
+<details>
+<summary>acf_uppy/cache</summary>
+
 ```php
 apply_filters( 'acf_uppy/cache', $cacheType );
 ```
 - `$cacheType` _(string)_: The TUS cache type.  
 Options: `redis`, `apcu` or `file`.  
-Default: `file`.
+Default: `apcu`.
+
+</details>
+
+<details>
+<summary>acf_uppy/cache_ttl</summary>
 
 ```php
 apply_filters( 'acf_uppy/cache_ttl', $cacheTtl );
 ```
 - `$cacheTtl` _(string)_: The TUS cache TTL in secs.  
 Default: `86400`.
+
+</details>
+
+<details>
+<summary>acf_uppy/file_name_exists</summary>
 
 ```php
 apply_filters( 'acf_uppy/file_name_exists', $fileName, $destPath, $pathinfo, $counter );
@@ -131,11 +290,21 @@ Default: `{$pathinfo['filename']}-{$counter}.{$pathinfo['extension']}`.
 - `$pathinfo` _(array)_: The [pathinfo](https://www.php.net/manual/en/function.pathinfo.php) of the file. 
 - `$counter` _(int)_: The incremented counter. 
 
+</details>
+
+<details>
+<summary>acf_uppy/file_name</summary>
+
 ```php
 apply_filters( 'acf_uppy/file_name', $fileName, $destPath );
 ```
 - `$fileName` _(string)_: The file name. 
 - `$destPath` _(string)_: The directory absolute path to the file. 
+
+</details>
+
+<details>
+<summary>acf_uppy/download_hash</summary>
 
 ```php
 apply_filters( 'acf_uppy/download_hash', $hash, $destFile, $postId );
@@ -144,6 +313,11 @@ apply_filters( 'acf_uppy/download_hash', $hash, $destFile, $postId );
 Default: `wp_hash( $destFile )`.
 - `$destFile` _(string)_: The absolute path of the file. 
 - `$postId` _(int)_: The ID of the post containing _ACF Uppy Field_.
+
+</details>
+
+<details>
+<summary>acf_uppy/download_hash/type={$postType}</summary>
 
 ```php
 apply_filters( 'acf_uppy/download_hash/type={$postType}', $hash, $destFile, $postId );
@@ -154,12 +328,22 @@ Default: `wp_hash( $destFile )`.
 - `$destFile` _(string)_: The absolute path of the file. 
 - `$postId` _(int)_: The ID of the post containing _ACF Uppy Field_.
 
+</details>
+
+<details>
+<summary>acf_uppy/download_allow</summary>
+
 ```php
 apply_filters( 'acf_uppy/download_allow', $allow, $destFile, $postId );
 ```
 - `$allow` _(bool)_: Whether or not to allow the file download. 
 - `$destFile` _(string)_: The absolute path of the file. 
 - `$postId` _(int)_: The ID of the post containing _ACF Uppy Field_.
+
+</details>
+
+<details>
+<summary>acf_uppy/download_allow/type={$postType}</summary>
 
 ```php
 apply_filters( 'acf_uppy/download_allow/type={$postType}', $allow, $destFile, $postId );
@@ -169,11 +353,21 @@ apply_filters( 'acf_uppy/download_allow/type={$postType}', $allow, $destFile, $p
 - `$destFile` _(string)_: The absolute path of the file. 
 - `$postId` _(int)_: The ID of the post containing _ACF Uppy Field_.
 
+</details>
+
+<details>
+<summary>acf_uppy/download_symlink_delete_days</summary>
+
 ```php
 apply_filters( 'acf_uppy/download_symlink_delete_days', $days );
 ```
 - `$days` _(int)_: Number of days before old symlinks are deleted.  
 Default: `1`.
+
+</details>
+
+<details>
+<summary>acf_uppy/download_symlink_delete_max</summary>
 
 ```php
 apply_filters( 'acf_uppy/download_symlink_delete_max', $max );
@@ -181,75 +375,28 @@ apply_filters( 'acf_uppy/download_symlink_delete_max', $max );
 - `$max` _(int)_: How many old symlinks need to be deleted on each request.  
 Default: `10`.
 
-### Webpack tasks
+</details>
 
-- Build sources: 
+## More info
 
-   ```sh
-   $ npm run develop
-   ```
+See [LINKS](docs/LINKS.md) file.
 
-- Start file watcher for recompiling: 
-
-   ```sh
-   $ npm run watch
-   ```
-
-- Build sources for production: 
-
-   ```sh
-   $ npm run production
-   ```
-
-### Changelog
+## Changelog
 
 See auto-[CHANGELOG](CHANGELOG.md) file.
 
-### Roadmap
+## Contributing
 
-1. Add support for Uppy fields associated with WP users.
-1. Test PHP 8.x.
+For your contributions please use:
 
-Do you need other features? Send me a [new enhancement](https://github.com/frugan-it/acf-uppy/labels/enhancement)!
+- [git-flow workflow](https://danielkummer.github.io/git-flow-cheatsheet/)
+- [conventional commits](https://www.conventionalcommits.org)
 
-### Contributing
+## Support
 
-For your contributions please use the [git-flow workflow](https://danielkummer.github.io/git-flow-cheatsheet/).
-
-### Support
-
-<!-- 
-https://www.buymeacoffee.com/brand 
-https://stackoverflow.com/a/26138535/3929620
-https://github.com/nrobinson2000/donate-bitcoin
-https://bitcoin.stackexchange.com/a/48744
-https://github.com/KristinitaTest/KristinitaTest.github.io/blob/master/donate/Bitcoin-Protocol-Markdown.md
--->
 [<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" width="200" alt="Buy Me A Coffee">](https://buymeacoff.ee/frugan)
 
-![Donate Me A Bitcoin](https://i.stack.imgur.com/MnQ6V.png)  
-My BTC address `17juoYguPJ6rgGwtkBUaQZeNKMk3mEKkn5`.
+## License
 
-### Usefull links
-
-- https://www.advancedcustomfields.com/resources/creating-a-new-field-type/
-- https://github.com/AdvancedCustomFields/acf-field-type-template
-- http://youmightnotneedjquery.com
-- http://vanilla-js.com/
-- https://vanillajstoolkit.com
-- https://hacks.mozilla.org/2018/03/es-modules-a-cartoon-deep-dive/
-- https://dmitripavlutin.com/string-interpolation-in-javascript/
-- https://github.com/ankitpokhrel/tus-php/wiki/WordPress-Integration
-- https://github.com/transloadit/uppy/issues/179
-- https://dev.to/konsole/resumable-file-upload-in-php-handle-large-file-uploads-in-an-elegant-way-4a84
-- https://dev.to/oyetoket/fastest-way-to-generate-random-strings-in-javascript-2k5a
-- https://mortoray.com/2014/04/09/allowing-unlimited-access-with-cors/
-- https://www.html5rocks.com/en/tutorials/cors//
-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors/CORSNotSupportingCredentials#What_went_wrong
-- https://choosealicense.com
-- https://learnwithdaniel.com/2019/09/publishing-your-first-wordpress-plugin-with-git-and-svn/
-
-### License
-
-(ɔ) Copyleft 2021 [Frugan](https://about.me/frugan)
-[GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0/), see [COPYING](COPYING) file.
+(ɔ) Copyleft 2024 [Frugan](https://frugan.it).  
+[GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0/), see [LICENSE](LICENSE) file.

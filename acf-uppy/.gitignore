@@ -1,0 +1,43 @@
+asset/
+
+grumphp.yml
+!grumphp.yml.dist
+
+.php-cs-fixer*
+!.php-cs-fixer.dist*
+
+.phpstan.neon
+!phpstan.neon.dist
+
+
+# Created by https://www.toptal.com/developers/gitignore/api/git,composer
+# Edit at https://www.toptal.com/developers/gitignore?templates=git,composer
+
+### Composer ###
+composer.phar
+/vendor/
+
+# Commit your application's lock file https://getcomposer.org/doc/01-basic-usage.md#commit-your-composer-lock-file-to-version-control
+# You may choose to ignore a library lock file http://getcomposer.org/doc/02-libraries.md#lock-file
+# composer.lock
+
+### Git ###
+# Created by git for backups. To disable backups in Git:
+# $ git config --global mergetool.keepBackup false
+*.orig
+
+# Created by git when using merge tools for conflicts
+*.BACKUP.*
+*.BASE.*
+*.LOCAL.*
+*.REMOTE.*
+*_BACKUP_*.txt
+*_BASE_*.txt
+*_LOCAL_*.txt
+*_REMOTE_*.txt
+
+# End of https://www.toptal.com/developers/gitignore/api/git,composer
+
+
+### Override ###
+

@@ -1,0 +1,119 @@
+services:
+
+  mariadb:
+    container_name: mariadb
+    image: docker.io/bitnami/mariadb:${MARIADB_TAG:-latest}
+    volumes:
+      - mariadb_data:/bitnami/mariadb
+    environment:
+      ALLOW_EMPTY_PASSWORD: ${MARIADB_ALLOW_EMPTY_PASSWORD:-yes}
+      MARIADB_USER: ${MARIADB_USER:-user}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD:-}
+      MARIADB_DATABASE: ${MARIADB_DATABASE:-wordpress}
+
+  wordpress:
+    container_name: wordpress
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.wordpress
+      args:
+        WORDPRESS_TAG: ${WORDPRESS_TAG:-latest}
+        WORDPRESS_SMTP_HOST: ${WORDPRESS_SMTP_HOST:-mailpit}
+        WORDPRESS_SMTP_PORT_NUMBER: ${WORDPRESS_SMTP_PORT_NUMBER:-1025}
+        WORDPRESS_SMTP_USER: ${WORDPRESS_SMTP_USER:-}
+        WORDPRESS_SMTP_PASSWORD: ${WORDPRESS_SMTP_PASSWORD:-}
+        WORDPRESS_SMTP_PROTOCOL: ${WORDPRESS_SMTP_PROTOCOL:-tls}
+    depends_on:
+      - mariadb
+    ports:
+      - 80:8080
+      - 443:8443
+      - ${PHPSTAN_PRO_WEB_PORT:-11111}:11111
+    volumes:
+      - wordpress_data:/bitnami/wordpress:rw
+      # `-plugin` suffix avoids conflicts w/ $AcfUppy->settings['tmpPath']
+      - ${PWD}/${PLUGIN_NAME:-acf-uppy}:/tmp/${PLUGIN_NAME:-acf-uppy}-plugin:rw
+      - ${PWD}/tmp/certs:/certs
+      - ${PWD}/tmp/phpstan-fixer:/tmp/phpstan-fixer:rw
+    environment:
+      ALLOW_EMPTY_PASSWORD: ${WORDPRESS_ALLOW_EMPTY_PASSWORD:-yes}
+      WORDPRESS_DATABASE_HOST: ${WORDPRESS_DATABASE_HOST:-mariadb}
+      WORDPRESS_DATABASE_PORT_NUMBER: ${WORDPRESS_DATABASE_PORT_NUMBER:-3306}
+      WORDPRESS_DATABASE_NAME: ${WORDPRESS_DATABASE_NAME:-wordpress}
+      WORDPRESS_DATABASE_USER: ${WORDPRESS_DATABASE_USER:-user}
+      WORDPRESS_DATABASE_PASSWORD: ${WORDPRESS_DATABASE_PASSWORD:-}
+      WORDPRESS_USERNAME: ${WORDPRESS_USERNAME:-admin}
+      WORDPRESS_PASSWORD: ${WORDPRESS_PASSWORD:-password}
+      WORDPRESS_PLUGINS: ${WORDPRESS_PLUGINS:-}
+      WORDPRESS_SMTP_HOST: ${WORDPRESS_SMTP_HOST:-mailpit}
+      WORDPRESS_SMTP_PORT_NUMBER: ${WORDPRESS_SMTP_PORT_NUMBER:-1025}
+      WORDPRESS_SMTP_USER: ${WORDPRESS_SMTP_USER:-}
+      WORDPRESS_SMTP_PASSWORD: ${WORDPRESS_SMTP_PASSWORD:-}
+      WORDPRESS_SMTP_PROTOCOL: ${WORDPRESS_SMTP_PROTOCOL:-tls}
+      OPENAI_KEY: ${OPENAI_KEY:-}
+      PHPSTAN_PRO_WEB_PORT: ${PHPSTAN_PRO_WEB_PORT:-11111}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+
+  node:
+    container_name: node
+    image: docker.io/bitnami/node:${NODE_TAG:-latest}
+    ports:
+      - ${NODE_PORT:-3000}:3000
+    volumes:
+      - ${PWD}:/app
+    #https://dev.to/igmrrf/docker-react-exited-with-code-0-398n
+    #https://stackoverflow.com/a/63427684/3929620
+    #https://stackoverflow.com/a/52336349/3929620
+    tty: true
+    environment:
+      NODE_ENV: ${NODE_ENV:-develop}
+      DEBUG: ${NODE_DEBUG:-}
+      LOG_LEVEL: ${NODE_LOG_LEVEL:-}
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: docker.io/bitnami/phpmyadmin:${PHPMYADMIN_TAG:-latest}
+    ports:
+      - ${PHPMYADMIN_HTTP_PORT:-8080}:8080
+      - ${PHPMYADMIN_HTTPS_PORT:-8443}:8443
+    depends_on:
+      - mariadb
+    volumes:
+      - ${PWD}/tmp/certs:/opt/bitnami/apache/conf/bitnami/certs
+    environment:
+      DATABASE_ALLOW_NO_PASSWORD: ${PHPMYADMIN_ALLOW_NO_PASSWORD:-yes}
+      DATABASE_HOST: ${PHPMYADMIN_DATABASE_HOST:-mariadb}
+      DATABASE_USER: ${PHPMYADMIN_DATABASE_USER:-user}
+      DATABASE_PASSWORD: ${PHPMYADMIN_DATABASE_PASSWORD:-}
+      DATABASE_PORT_NUMBER: ${PHPMYADMIN_DATABASE_PORT_NUMBER:-3306}
+      DATABASE_ENABLE_SSL: ${PHPMYADMIN_DATABASE_ENABLE_SSL:-no}
+      DATABASE_SSL_KEY: ${PHPMYADMIN_DATABASE_SSL_KEY:-}
+      DATABASE_SSL_CERT: ${PHPMYADMIN_DATABASE_SSL_CERT:-}
+      DATABASE_SSL_CA: ${PHPMYADMIN_DATABASE_SSL_CA:-}
+      DATABASE_SSL_CA_PATH: ${PHPMYADMIN_DATABASE_SSL_CA_PATH:-}
+      DATABASE_SSL_CIPHERS: ${PHPMYADMIN_DATABASE_SSL_CIPHERS:-}
+      DATABASE_SSL_VERIFY: ${PHPMYADMIN_DATABASE_SSL_VERIFY:-yes}
+
+  mailpit:
+    container_name: mailpit
+    image: docker.io/axllent/mailpit:${MAILPIT_TAG:-latest}
+    ports:
+      - ${MAILPIT_HTTP_PORT:-8025}:8025
+    volumes:
+      - mailpit_data:/data
+      - ${PWD}/tmp/certs:/certs
+    environment:
+      MP_MAX_MESSAGES: ${MAILPIT_MAX_MESSAGES:-5000}
+      MP_DATA_FILE: /data/mailpit.db
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+      MP_UI_TLS_CERT: /certs/server.crt
+      MP_UI_TLS_KEY: /certs/server.key
+
+volumes:
+  mariadb_data:
+    driver: local
+  wordpress_data:
+    driver: local
+  mailpit_data:
+    driver: local
