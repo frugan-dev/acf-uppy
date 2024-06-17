@@ -116,7 +116,7 @@ $(TMP_DIR)/wait-for-it.sh:
 
 set-env:
 	@echo "Setting environment variables"
-	@$(eval PLUGIN_VERSION := $(shell git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//'))
+	@$(eval PLUGIN_VERSION := $(git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//'))
 	@if [ -z "$(PLUGIN_VERSION)" ]; then \
 		echo "No git tags found. Please create a tag before running make."; \
 		exit 1; \
