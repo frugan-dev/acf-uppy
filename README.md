@@ -12,7 +12,7 @@
 
 # ACF Uppy Field (WordPress Plugin)
 
-_ACF Uppy Field_ is a WordPress plugin that adds a new `Uppy` custom field to the list of fields of the [Advanced Custom Fields](https://www.advancedcustomfields.com) plugin. This custom field allows you to __upload files of all types and sizes__ using the [TUS protocol](https://tus.io) and the [Uppy JS uploader](https://uppy.io), overcoming the limitations of the default ACF `File` field. With _ACF Uppy Field_, you no longer need to increase server-side INI parameters such as _upload_max_filesize_, _post_max_size_, _max_execution_time_ and _memory_limit_.
+__ACF Uppy Field__ is a WordPress plugin that adds a new `Uppy` custom field to the list of fields of the [Advanced Custom Fields](https://www.advancedcustomfields.com) plugin. This custom field allows you to __upload files of all types and sizes__ using the [TUS protocol](https://tus.io) and the [Uppy JS uploader](https://uppy.io), overcoming the limitations of the default ACF `File` field. With __ACF Uppy Field__, you no longer need to increase server-side INI parameters such as `upload_max_filesize`, `post_max_size`, `max_execution_time` and `memory_limit`.
 
 ![](docs/img/demo.gif)
 
@@ -110,7 +110,7 @@ _* Note: `composer/installers` might already be required by another dependency._
 <details>
 <summary>Installation via Composer (wpackagist) (coming soon)</summary>
 
-If you use Composer to manage WordPress plugins, you can install it from (WordPress Packagist)[https://wpackagist.org]:
+If you use Composer to manage WordPress plugins, you can install it from [WordPress Packagist](https://wpackagist.org):
 
 1. Open your terminal.
 2. Navigate to the root directory of your WordPress installation.

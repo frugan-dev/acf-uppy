@@ -30,6 +30,13 @@ jobs:
       run: |
         cp .env.dist .env
 
+    - name: Generate self-signed CA
+      uses: kofemann/action-create-certificate@v0.0.4
+      with:
+        hostcert: 'certs/server.crt'
+        hostkey: 'certs/server.key'
+        cachain: 'certs/ca-chain.pem'
+
     - name: Run Makefile tasks
       run: |
         make test MARIADB_TAG=$MARIADB_TAG WORDPRESS_TAG=$WORDPRESS_TAG NODE_TAG=$NODE_TAG
