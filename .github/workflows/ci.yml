@@ -26,9 +26,10 @@ jobs:
     - name: Set up Docker
       uses: docker/setup-buildx-action@v1
 
-    - name: Create .env file
+    - name: Create .env file and certs directory
       run: |
         cp .env.dist .env
+        mkdir certs
 
     - name: Generate self-signed CA
       uses: kofemann/action-create-certificate@v0.0.4
