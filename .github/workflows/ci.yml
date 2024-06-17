@@ -21,7 +21,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
         fetch-tags: true
@@ -47,5 +47,10 @@ jobs:
   
     - name: Run Makefile tasks
       run: |
-        make test MARIADB_TAG=$MARIADB_TAG WORDPRESS_TAG=$WORDPRESS_TAG NODE_TAG=$NODE_TAG
+        make test \
+          WORDPRESS_CONTAINER_HOST=wordpress \
+          NODE_CONTAINER_HOST=node \
+          MARIADB_TAG=$MARIADB_TAG \
+          WORDPRESS_TAG=$WORDPRESS_TAG \
+          NODE_TAG=$NODE_TAG
         make down
