@@ -26,18 +26,22 @@ jobs:
     - name: Set up Docker
       uses: docker/setup-buildx-action@v1
 
-    - name: Create .env file and certs directory
+    - name: Create .env file
       run: |
         cp .env.dist .env
-        mkdir certs
 
     - name: Generate self-signed CA
       uses: kofemann/action-create-certificate@v0.0.4
       with:
-        hostcert: 'certs/server.crt'
-        hostkey: 'certs/server.key'
-        cachain: 'certs/ca-chain.pem'
+        hostcert: 'server.crt'
+        hostkey: 'server.key'
+        cachain: 'ca-chain.pem'
 
+    - name: Move certificates
+      run: |
+        mkdir -p tmp/certs
+        mv server.crt server.key ca-chain.pem tmp/certs/
+  
     - name: Run Makefile tasks
       run: |
         make test MARIADB_TAG=$MARIADB_TAG WORDPRESS_TAG=$WORDPRESS_TAG NODE_TAG=$NODE_TAG
