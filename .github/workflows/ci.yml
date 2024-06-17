@@ -33,6 +33,11 @@ jobs:
       run: |
         cp .env.dist .env
 
+    #- name: Install mkcert
+    #  run: |
+    #    sudo apt-get update && sudo apt-get install libnss3-tools
+    #    wget -q -O - https://mkcert.dev/install.sh | sudo bash 
+
     - name: Generate self-signed CA
       uses: kofemann/action-create-certificate@v0.0.4
       with:
@@ -47,9 +52,11 @@ jobs:
   
     - name: Run Makefile tasks
       run: |
+        make install \
+          MARIADB_TAG=$MARIADB_TAG \
+          WORDPRESS_TAG=$WORDPRESS_TAG \
+          NODE_TAG=$NODE_TAG
         make test \
-          WORDPRESS_CONTAINER_HOST=wordpress \
-          NODE_CONTAINER_HOST=node \
           MARIADB_TAG=$MARIADB_TAG \
           WORDPRESS_TAG=$WORDPRESS_TAG \
           NODE_TAG=$NODE_TAG

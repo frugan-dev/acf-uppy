@@ -61,10 +61,8 @@ GITHUB_TOKEN ?=
 MODE ?= develop
 
 WORDPRESS_CONTAINER_NAME=wordpress
-WORDPRESS_CONTAINER_HOST ?= localhost
 WORDPRESS_CONTAINER_USER=root
 NODE_CONTAINER_NAME=node
-NODE_CONTAINER_HOST ?= localhost
 NODE_CONTAINER_USER=root
 NODE_CONTAINER_BUILD_DIR=/app/build
 TMP_DIR=tmp
@@ -126,8 +124,8 @@ set-env:
 
 wait:
 	@echo "Waiting for services to be ready"
-	@$(TMP_DIR)/wait-for-it.sh $(WORDPRESS_CONTAINER_HOST):80 --timeout=300 --strict -- echo "WordPress is up"
-	@$(TMP_DIR)/wait-for-it.sh $(NODE_CONTAINER_HOST):$(NODE_PORT) --timeout=300 --strict -- echo "Node is up"
+	@$(TMP_DIR)/wait-for-it.sh localhost:80 --timeout=300 --strict -- echo "WordPress is up"
+	@$(TMP_DIR)/wait-for-it.sh localhost:$(NODE_PORT) --timeout=300 --strict -- echo "Node is up"
 	
 	@echo "Waiting for WordPress to complete setup"
 	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'timeout=300; while [ $$timeout -gt 0 ]; do [ -f $${WORDPRESS_CONF_FILE:-/bitnami/wordpress/wp-config.php} ] && break; echo "Waiting for wp-config.php..."; sleep 5; timeout=$$((timeout - 5)); done; [ $$timeout -gt 0 ]'
