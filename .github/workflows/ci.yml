@@ -32,5 +32,5 @@ jobs:
 
     - name: Run Makefile tasks
       run: |
-        make test MODE=production MARIADB_TAG=$MARIADB_TAG WORDPRESS_TAG=$WORDPRESS_TAG NODE_TAG=$NODE_TAG
+        make test MARIADB_TAG=$MARIADB_TAG WORDPRESS_TAG=$WORDPRESS_TAG NODE_TAG=$NODE_TAG
         make down
