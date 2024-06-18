@@ -3,7 +3,7 @@
 
 include .env
 
-PLUGIN_NAME ?= acf-uppy
+PLUGIN_NAME ?=
 PLUGIN_VERSION ?=
 
 MARIADB_TAG ?= latest
@@ -80,7 +80,7 @@ install: all wait install-node install-wordpress
 
 test: setup test-node test-wordpress
 
-deploy: install test deploy-zip
+deploy: setup deploy-zip
 ifeq ($(filter $(GITHUB_ACTIONS),false),false)
 ifeq ($(MODE),production)
 	$(MAKE) deploy-svn
@@ -122,6 +122,13 @@ $(TMP_DIR)/wait-for-it.sh:
 
 set-env:
 	@echo "Setting environment variables"
+ifeq ($(PLUGIN_NAME),)
+	@$(eval PLUGIN_NAME := $(shell basename `git rev-parse --show-toplevel`))
+	@if [ -z "$(PLUGIN_NAME)" ]; then \
+		echo "PLUGIN_NAME is not set and could not be determined."; \
+		exit 1; \
+	fi
+endif
 ifeq ($(PLUGIN_VERSION),)
 	@$(eval PLUGIN_VERSION := $(shell git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//'))
 	@if [ -z "$(PLUGIN_VERSION)" ]; then \

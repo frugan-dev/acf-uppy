@@ -25,6 +25,8 @@ jobs:
       with:
         fetch-depth: 0
         fetch-tags: true
+    - run: |
+        echo "::set-env name=IS_LAST_JOB::$([ $(expr ${{ strategy.job-index }} + 1) = ${{ strategy.job-total }} ] && echo true)"
 
     - name: Set up Docker
       uses: docker/setup-buildx-action@v1
@@ -60,6 +62,7 @@ jobs:
           MARIADB_TAG=$MARIADB_TAG \
           WORDPRESS_TAG=$WORDPRESS_TAG \
           NODE_TAG=$NODE_TAG \
+          PLUGIN_NAME=${{ github.event.repository.name }} \
           PLUGIN_VERSION=${{ github.ref_name }}
 
     #https://cardinalby.github.io/blog/post/github-actions/implementing-deferred-steps/
@@ -80,13 +83,30 @@ jobs:
           MARIADB_TAG=$MARIADB_TAG \
           WORDPRESS_TAG=$WORDPRESS_TAG \
           NODE_TAG=$NODE_TAG \
-          GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} \
-          PLUGIN_VERSION=${{ github.ref_name }}
+          PLUGIN_NAME=${{ github.event.repository.name }} \
+          PLUGIN_VERSION=${{ github.ref_name }} \
+          GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
 
     - name: Run Makefile 'test' task
       run: |
         make test \
+          PLUGIN_NAME=${{ github.event.repository.name }} \
           PLUGIN_VERSION=${{ github.ref_name }}
+
+    - name: Run Makefile 'deploy' task
+      if: startsWith(github.ref, 'refs/tags/v') && github.ref_type == 'tag' && ${{ env.IS_LAST_JOB }}
+      run: |
+        make deploy \
+          MODE=production \
+          PLUGIN_NAME=${{ github.event.repository.name }} \
+          PLUGIN_VERSION=${{ github.ref_name }}
+  
+    - name: Save artifact
+      if: startsWith(github.ref, 'refs/tags/v') && github.ref_type == 'tag' && ${{ env.IS_LAST_JOB }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-output
+        path: dist/${{ github.event.repository.name }}-${{ github.ref_name }}.zip
           
     - name: Run Makefile 'down' task
       run: make down
