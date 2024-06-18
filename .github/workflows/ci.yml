@@ -131,7 +131,7 @@ jobs:
           PLUGIN_VERSION=${{ github.ref_name }} \
           GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
   
-    - name: Save artifact
+    - name: Upload artifact
       if: |
         startsWith(github.ref, 'refs/tags/v') 
         && github.ref_type == 'tag' 
