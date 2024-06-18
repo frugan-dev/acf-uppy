@@ -126,9 +126,26 @@ module.exports = (env, argv = {}) => {
                 {
                     test: /\.(sa|sc|c)ss$/,
                     use: [
+                        // The order in which webpack apply loaders is from last to first
                         MiniCssExtractPlugin.loader,
-                        "css-loader",
-                        "sass-loader"
+                        // Creates `style` nodes from JS strings
+                        //'style-loader',
+                        // Translates CSS into CommonJS
+                        {
+                          loader: 'css-loader',
+                          options: {
+                            sourceMap: !isProduction,
+                          },
+                        },
+                        // Compiles Sass to CSS
+                        {
+                          loader: 'sass-loader',
+                          options: {
+                            //https://github.com/bholloway/resolve-url-loader/issues/212#issuecomment-1011630220
+                            // resolve-url-loader: error processing CSS a valid source-map is not present (ensure preceding loaders output a source-map)
+                            sourceMap: true,
+                          },
+                        },
                     ],
                 },
             ]

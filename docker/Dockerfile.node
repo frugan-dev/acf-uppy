@@ -1,7 +1,0 @@
-ARG NODE_TAG=latest
-FROM docker.io/bitnami/node:${NODE_TAG}
-
-# required by Github Actions
-RUN apt-get update \
-    && apt-get install -y python2 \
-    && ln -s /usr/bin/python2 /usr/bin/python
