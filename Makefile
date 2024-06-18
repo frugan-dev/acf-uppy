@@ -85,12 +85,13 @@ endif
 
 check:
 	@echo "Checking requirements"
-	@command -v curl >/dev/null 2>&1 || $(error curl is required but not installed. Aborting.)
-	@command -v git >/dev/null 2>&1 || $(error git is required but not installed. Aborting.)
-	@command -v rsync >/dev/null 2>&1 || $(error rsync is required but not installed. Aborting.)
-	@command -v zip >/dev/null 2>&1 || $(error zip is required but not installed. Aborting.)
+	@#https://stackoverflow.com/a/44061904/3929620
+	@command -v curl >/dev/null 2>&1 || { echo >&2 "curl is required but not installed. Aborting."; exit 1; }
+	@command -v git >/dev/null 2>&1 || { echo >&2 "git is required but not installed. Aborting."; exit 1; }
+	@command -v rsync >/dev/null 2>&1 || { echo >&2 "rsync is required but not installed. Aborting."; exit 1; }
+	@command -v zip >/dev/null 2>&1 || { echo >&2 "zip is required but not installed. Aborting."; exit 1; }
 ifeq ($(MODE),production)
-	@command -v svn >/dev/null 2>&1 || $(error svn is required but not installed. Aborting.)
+	@command -v svn >/dev/null 2>&1 || { echo >&2 "svn is required but not installed. Aborting."; exit 1; }
 endif
 
 .gitconfig: 
