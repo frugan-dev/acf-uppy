@@ -254,8 +254,8 @@ clean-node:
 
 clean-wordpress: 
 	@echo "[wordpress] Cleaning artifacts"
-	@rm -rf $(PLUGIN_NAME)/.git $(PLUGIN_NAME)/vendor $(PLUGIN_NAME)/composer.lock $(DIST_DIR)/*
-	@find $(PLUGIN_NAME)/symlink -mindepth 1 -maxdepth 1 -type d | xargs rm -rf
+	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'cd $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/plugins/$(PLUGIN_NAME) && rm -rf .git vendor composer.lock && find symlink -mindepth 1 -maxdepth 1 -type d | xargs rm -rf'
+	@rm -rf $(DIST_DIR)/*
 
 down: 
 	@echo "Stopping docker compose services"

@@ -138,3 +138,7 @@ jobs:
           
     - name: Run Makefile 'down' task
       run: make down
+
+    - name: Remove Docker volumes
+      run: |
+        docker volume rm mariadb_data wordpress_data mailpit_data || true
