@@ -79,19 +79,19 @@ install: all wait install-node install-wordpress
 test: setup test-node test-wordpress
 
 deploy: install test deploy-zip
-	@if [ "$(MODE)" = "production" ]; then \
-		$(MAKE) deploy-svn; \
-	fi
+ifeq ($(MODE),production)
+	$(MAKE) deploy-svn
+endif
 
 check:
 	@echo "Checking requirements"
-	@command -v curl >/dev/null 2>&1 || { echo >&2 "curl is required but not installed. Aborting."; exit 1; }
-	@command -v git >/dev/null 2>&1 || { echo >&2 "git is required but not installed. Aborting."; exit 1; }
-	@command -v rsync >/dev/null 2>&1 || { echo >&2 "rsync is required but not installed. Aborting."; exit 1; }
-	@command -v zip >/dev/null 2>&1 || { echo >&2 "zip is required but not installed. Aborting."; exit 1; }
-	@if [ "$(MODE)" = "production" ]; then \
-		@command -v svn >/dev/null 2>&1 || { echo >&2 "svn is required but not installed. Aborting."; exit 1; } \
-	fi
+	@command -v curl >/dev/null 2>&1 || $(error curl is required but not installed. Aborting.)
+	@command -v git >/dev/null 2>&1 || $(error git is required but not installed. Aborting.)
+	@command -v rsync >/dev/null 2>&1 || $(error rsync is required but not installed. Aborting.)
+	@command -v zip >/dev/null 2>&1 || $(error zip is required but not installed. Aborting.)
+ifeq ($(MODE),production)
+	@command -v svn >/dev/null 2>&1 || $(error svn is required but not installed. Aborting.)
+endif
 
 .gitconfig: 
 	@echo "Setting up .gitconfig"
@@ -117,18 +117,25 @@ $(TMP_DIR)/wait-for-it.sh:
 set-env:
 	@echo "Setting environment variables"
 	@$(eval PLUGIN_VERSION := $(shell git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//'))
-	@if [ -z "$(PLUGIN_VERSION)" ]; then \
-		echo "No git tags found. Please create a tag before running make."; \
-		exit 1; \
-	fi
+ifeq ($(PLUGIN_VERSION),)
+	$(error No git tags found. Please create a tag before running make.)
+endif
 
 wait:
 	@echo "Waiting for services to be ready"
 	@$(TMP_DIR)/wait-for-it.sh localhost:80 --timeout=300 --strict -- echo "WordPress is up"
 	@$(TMP_DIR)/wait-for-it.sh localhost:$(NODE_PORT) --timeout=300 --strict -- echo "Node is up"
-	
+
+ifneq ($(MODE),github)
 	@echo "Waiting for WordPress to complete setup"
-	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'timeout=300; while [ $$timeout -gt 0 ]; do [ -f $${WORDPRESS_CONF_FILE:-/bitnami/wordpress/wp-config.php} ] && break; echo "Waiting for wp-config.php ($$timeout seconds left)..."; sleep 5; timeout=$$((timeout - 5)); done; [ $$timeout -gt 0 ] || { echo "Error: Timeout reached, wp-config.php not found"; }'
+	@#https://cardinalby.github.io/blog/post/github-actions/implementing-deferred-steps/
+	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'timeout=300; while [ $$timeout -gt 0 ]; do \
+		[ -f $${WORDPRESS_CONF_FILE:-/bitnami/wordpress/wp-config.php} ] && break; \
+		echo "Waiting for wp-config.php ($$timeout seconds left)..."; \
+		sleep 5; timeout=$$((timeout - 5)); \
+	done; \
+	[ $$timeout -gt 0 ] || { echo "Error: Timeout reached, wp-config.php not found"; exit 1; }'
+endif
 
 up:
 	@echo "Starting docker compose services"
@@ -139,10 +146,10 @@ install-node: clean-node
 	@$(DOCKER_COMPOSE) exec -u$(NODE_CONTAINER_USER) $(NODE_CONTAINER_NAME) sh -c 'cd $(NODE_CONTAINER_BUILD_DIR)/front && npm install && npm run develop && npm run production'
 
 install-wordpress: clean-wordpress
-	@if [ -n "$(GITHUB_TOKEN)" ]; then \
-		echo "[wordpress] Updating composer config ($(MODE))"; \
-		$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'composer config -g github-oauth.github.com $(GITHUB_TOKEN)'; \
-	fi
+ifneq ($(GITHUB_TOKEN),)
+	@echo "[wordpress] Updating composer config ($(MODE))"
+	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'composer config -g github-oauth.github.com $(GITHUB_TOKEN)'
+endif
 
 	@echo "[wordpress] Creating symbolic links ($(MODE))"
 	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'ln -sfn /tmp/$(PLUGIN_NAME)-plugin $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/plugins/$(PLUGIN_NAME)'
@@ -157,11 +164,11 @@ install-wordpress: clean-wordpress
 	@# `extra.installer-paths."../{$name}/"` in the composer.json seems to be sufficient, while with PHP 8.x it is not.
 	@# Adding Composer's `--working-dir` option with PHP 8.x doesn't work.
 	@# For this reason, the absolute path `extra.installer-paths` had to be specified in the composer.json.
-	@if [ "$(MODE)" = "production" ]; then \
-		$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'cd $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/plugins/$(PLUGIN_NAME) && composer install --optimize-autoloader --classmap-authoritative --no-dev --no-interaction'; \
-	else \
-		$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'cd $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/plugins/$(PLUGIN_NAME) && composer update --optimize-autoloader --no-interaction'; \
-	fi
+ifeq ($(MODE),production)
+	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'cd $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/plugins/$(PLUGIN_NAME) && composer install --optimize-autoloader --classmap-authoritative --no-dev --no-interaction'
+else
+	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'cd $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/plugins/$(PLUGIN_NAME) && composer update --optimize-autoloader --no-interaction'
+endif
 	
 	@echo "[wordpress] Activate WP-CFM plugin ($(MODE))"
 	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'wp plugin activate wp-cfm --allow-root'
@@ -212,8 +219,7 @@ deploy-zip:
 deploy-svn:
 	@echo "Deploying to WordPress SVN"
 	@if ! svn ls https://plugins.svn.wordpress.org/$(PLUGIN_NAME)/ >/dev/null 2>&1; then \
-		echo "SVN repository does not exist. Aborting."; \
-		exit 1; \
+		$(error SVN repository does not exist. Aborting.); \
 	fi
 	@svn checkout https://plugins.svn.wordpress.org/$(PLUGIN_NAME)/ $(TMP_DIR)/$(SVN_DIR)
 	@rsync -av --delete $(DIST_DIR)/$(PLUGIN_NAME)-$(PLUGIN_VERSION) $(TMP_DIR)/$(SVN_DIR)/trunk/

@@ -34,32 +34,61 @@ jobs:
         cp .env.dist .env
 
     # method #1
-    #- name: Install mkcert
-    #  run: |
-    #    sudo apt-get update && sudo apt-get install libnss3-tools
-    #    wget -q -O - https://mkcert.dev/install.sh | sudo bash 
+    - name: Install mkcert
+      run: |
+        sudo apt-get update && sudo apt-get install libnss3-tools
+        wget -q -O - https://mkcert.dev/install.sh | sudo bash 
 
     # method #2
-    - name: Generate self-signed CA
-      uses: kofemann/action-create-certificate@v0.0.4
-      with:
-        hostcert: 'server.crt'
-        hostkey: 'server.key'
-        cachain: 'ca-chain.pem'
+    #- name: Generate self-signed CA
+    #  uses: kofemann/action-create-certificate@v0.0.4
+    #  with:
+    #    hostcert: 'server.crt'
+    #    hostkey: 'server.key'
+    #    cachain: 'ca-chain.pem'
 
-    - name: Move certificates
-      run: |
-        mkdir -p tmp/certs
-        mv server.crt server.key ca-chain.pem tmp/certs/
+    #- name: Move certificates
+    #  run: |
+    #    mkdir -p tmp/certs
+    #    mv server.crt server.key ca-chain.pem tmp/certs/
   
-    - name: Run Makefile tasks
+    - name: Run Makefile 'all' task
       run: |
-        make install \
+        make \
+          MODE=github \
           MARIADB_TAG=$MARIADB_TAG \
           WORDPRESS_TAG=$WORDPRESS_TAG \
           NODE_TAG=$NODE_TAG
+
+    #https://cardinalby.github.io/blog/post/github-actions/implementing-deferred-steps/
+    - name: Wait for WordPress setup to complete
+      run: |
+        timeout=300
+        while [ $timeout -gt 0 ]; do
+          docker compose exec wordpress test -f /bitnami/wordpress/wp-config.php && break
+          echo "Waiting for wp-config.php ($timeout seconds left)..."
+          sleep 5
+          timeout=$((timeout - 5))
+        done
+        [ $timeout -gt 0 ] || { echo "Error: Timeout reached, wp-config.php not found"; exit 1; }
+
+    - name: Run Makefile 'install-*' tasks
+      run: |
+        make install-node install-wordpress \
+          MODE=github \
+          MARIADB_TAG=$MARIADB_TAG \
+          WORDPRESS_TAG=$WORDPRESS_TAG \
+          NODE_TAG=$NODE_TAG
+
+    - name: Run Makefile 'test' task
+      run: |
         make test \
+          MODE=github \
           MARIADB_TAG=$MARIADB_TAG \
           WORDPRESS_TAG=$WORDPRESS_TAG \
           NODE_TAG=$NODE_TAG
-        make down
+          
+    - name: Run Makefile 'down' task
+      run: |
+        make down \
+          MODE=github
