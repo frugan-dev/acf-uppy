@@ -162,6 +162,9 @@ endif
 		git init; \
 		#git config user.email "you@example.com"; \
 		#git config user.name "Your Name"; \
+		# required by Github
+		#FIXED: fatal: detected dubious ownership in repository at '/tmp/$(PLUGIN_NAME)-plugin'
+		git config --global --add safe.directory /tmp/$(PLUGIN_NAME)-plugin; \
 	}'
 	
 	@echo "[wordpress] Installing dependencies ($(MODE))"
