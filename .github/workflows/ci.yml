@@ -29,13 +29,21 @@ jobs:
     - name: Set up Docker
       uses: docker/setup-buildx-action@v1
 
+    #- name: Cache Docker layers
+    #  uses: actions/cache@v4
+    #  with:
+    #    path: |
+    #      /tmp/.buildx-cache
+    #    key: ${{ runner.os }}-${{ matrix.mariadb_tag }}-${{ matrix.wordpress_tag }}-${{ matrix.node_tag }}-buildx-${{ hashFiles('**/.buildx-cache') }}
+    #    restore-keys: |
+    #      ${{ runner.os }}-${{ matrix.mariadb_tag }}-${{ matrix.wordpress_tag }}-${{ matrix.node_tag }}-buildx-
+
     - name: Set GITHUB_ENV
       run: |
         echo "IS_LAST_JOB=$([ $(expr ${{ strategy.job-index }} + 1) = ${{ strategy.job-total }} ] && echo true)" >> $GITHUB_ENV
 
     - name: Create .env file
-      run: |
-        cp .env.dist .env
+      run: cp .env.dist .env
 
     # method #1
     - name: Install mkcert
