@@ -29,9 +29,10 @@ jobs:
     - name: Set up Docker
       uses: docker/setup-buildx-action@v1
 
-    - name: Prune Docker volumes
+    - name: Prune Docker
       run: |
         docker volume prune -af || true
+        docker container prune -f || true
 
     - name: Cache Docker layers
       uses: actions/cache@v4
