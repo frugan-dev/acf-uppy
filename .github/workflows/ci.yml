@@ -26,7 +26,7 @@ jobs:
         fetch-depth: 0
         fetch-tags: true
     - run: |
-        echo "::set-env name=IS_LAST_JOB::$([ $(expr ${{ strategy.job-index }} + 1) = ${{ strategy.job-total }} ] && echo true)"
+        echo "IS_LAST_JOB=$([ $(expr ${{ strategy.job-index }} + 1) = ${{ strategy.job-total }} ] && echo true)" >> $GITHUB_ENV
 
     - name: Set up Docker
       uses: docker/setup-buildx-action@v1
