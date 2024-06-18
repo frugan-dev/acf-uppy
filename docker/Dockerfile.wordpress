@@ -1,0 +1,53 @@
+ARG WORDPRESS_TAG=latest
+FROM docker.io/bitnami/wordpress:${WORDPRESS_TAG}
+
+USER root
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update \
+    #&& echo "nullmailer nullmailer/defaultdomain string example.com" | debconf-set-selections \
+    #&& echo "nullmailer nullmailer/relayhost string smtp.example.com" | debconf-set-selections \
+    #&& echo "nullmailer nullmailer/relayuser string username" | debconf-set-selections \
+    #&& echo "nullmailer nullmailer/relaypass password" | debconf-set-selections \
+    #&& echo "nullmailer nullmailer/adminaddr string admin@example.com" | debconf-set-selections \
+    && echo "nullmailer nullmailer/mailname string me" | debconf-set-selections \
+    && apt-get install -y \
+        # required by composer
+        git \
+        unzip \
+        # required by phpstan pro
+        xdg-utils \
+        # fix missing sendmail
+        nullmailer \
+    && rm -rf /var/lib/apt/lists/*
+
+ARG WORDPRESS_SMTP_HOST
+ARG WORDPRESS_SMTP_PORT_NUMBER
+ARG WORDPRESS_SMTP_USER
+ARG WORDPRESS_SMTP_PASSWORD
+ARG WORDPRESS_SMTP_PROTOCOL
+
+COPY docker/sendmail-wrapper /usr/sbin/sendmail-wrapper
+
+RUN echo "${WORDPRESS_SMTP_HOST} smtp \
+    --port=${WORDPRESS_SMTP_PORT_NUMBER} \
+    --user=${WORDPRESS_SMTP_USER} \
+    --pass=${WORDPRESS_SMTP_PASSWORD} \
+    # https://manpages.debian.org/experimental/nullmailer/remotes.5#remotes
+    # `tls` option automatically switch the default port to 465
+    #--${WORDPRESS_SMTP_PROTOCOL} \
+    --insecure" > /etc/nullmailer/remotes \
+    && chmod +x /usr/sbin/sendmail-wrapper \
+    && ln -sf /usr/sbin/sendmail-wrapper /usr/sbin/sendmail
+
+RUN { \
+        # available in bitnami/wordpress, but not actived
+        echo 'extension = apcu'; \  
+        # superfluous as bitnami/wordpress uses mod_php, so the .user.ini file doesn't work
+        echo 'user_ini.cache_ttl = 0'; \
+        #https://docs.bitnami.com/aws/infrastructure/lamp/administration/disable-cache/
+        echo 'opcache.enable = 0'; \
+    } >> /opt/bitnami/php/etc/php.ini
+
+USER 1001

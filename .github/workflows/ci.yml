@@ -1,0 +1,140 @@
+name: CI
+
+on:
+  push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        mariadb_tag: [
+          latest
+        ]
+        wordpress_tag: [
+          latest
+        ]
+        node_tag: [
+          14
+        ]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        fetch-tags: true
+
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v1
+
+    - name: Cache Docker layers
+      uses: actions/cache@v4
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-buildx-${{ matrix.mariadb_tag }}-${{ matrix.wordpress_tag }}-${{ matrix.node_tag }}-${{ hashFiles('**/Dockerfile') }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-${{ matrix.mariadb_tag }}-${{ matrix.wordpress_tag }}-${{ matrix.node_tag }}-
+
+    - name: Cache npm modules
+      uses: actions/cache@v4
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ matrix.node_tag }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-${{ matrix.node_tag }}-
+
+    - name: Set GITHUB_ENV
+      run: |
+        echo "IS_LAST_JOB=$([ $(expr ${{ strategy.job-index }} + 1) = ${{ strategy.job-total }} ] && echo true)" >> $GITHUB_ENV
+
+    - name: Create .env file
+      run: cp .env.dist .env
+
+    # method #1
+    - name: Install mkcert
+      run: |
+        sudo apt-get update && sudo apt-get install libnss3-tools
+        curl -JLO "https://dl.filippo.io/mkcert/latest?for=linux/amd64"
+        chmod +x mkcert-v*-linux-amd64
+        sudo cp mkcert-v*-linux-amd64 /usr/local/bin/mkcert
+
+    # method #2
+    #- name: Generate self-signed CA
+    #  uses: kofemann/action-create-certificate@v0.0.4
+    #  with:
+    #    hostcert: 'server.crt'
+    #    hostkey: 'server.key'
+    #    cachain: 'ca-chain.pem'
+
+    #- name: Move certificates
+    #  run: |
+    #    mkdir -p tmp/certs
+    #    mv server.crt server.key ca-chain.pem tmp/certs/
+  
+    - name: Run Makefile 'all' task
+      run: |
+        make \
+          MARIADB_TAG=$MARIADB_TAG \
+          WORDPRESS_TAG=$WORDPRESS_TAG \
+          NODE_TAG=$NODE_TAG \
+          PLUGIN_NAME=${{ github.event.repository.name }} \
+          PLUGIN_VERSION=${{ github.ref_name }}
+
+    #https://cardinalby.github.io/blog/post/github-actions/implementing-deferred-steps/
+    #- name: Wait for WordPress setup to complete
+    #  run: |
+    #    timeout=300
+    #    while [ $timeout -gt 0 ]; do
+    #      docker compose exec wordpress test -f /bitnami/wordpress/wp-config.php && break
+    #      echo "Waiting for wp-config.php ($timeout seconds left)..."
+    #      sleep 5
+    #      timeout=$((timeout - 5))
+    #    done
+    #    [ $timeout -gt 0 ] || { echo "Error: Timeout reached, wp-config.php not found"; exit 1; }
+
+    - name: Run Makefile 'install' task
+      run: |
+        make install \
+          MARIADB_TAG=$MARIADB_TAG \
+          WORDPRESS_TAG=$WORDPRESS_TAG \
+          NODE_TAG=$NODE_TAG \
+          PLUGIN_NAME=${{ github.event.repository.name }} \
+          PLUGIN_VERSION=${{ github.ref_name }} \
+          GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+
+    - name: Run Makefile 'test' task
+      run: |
+        make test \
+          PLUGIN_NAME=${{ github.event.repository.name }} \
+          PLUGIN_VERSION=${{ github.ref_name }}
+
+    #https://github.com/orgs/community/discussions/25641#discussioncomment-3248571
+    - name: Run Makefile 'deploy' task
+      if: |
+        startsWith(github.ref, 'refs/tags/v') 
+        && github.ref_type == 'tag' 
+        && env.IS_LAST_JOB
+      run: |
+        make deploy \
+          MODE=production \
+          MARIADB_TAG=$MARIADB_TAG \
+          WORDPRESS_TAG=$WORDPRESS_TAG \
+          NODE_TAG=$NODE_TAG \
+          PLUGIN_NAME=${{ github.event.repository.name }} \
+          PLUGIN_VERSION=${{ github.ref_name }} \
+          GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+  
+    - name: Save artifact
+      if: |
+        startsWith(github.ref, 'refs/tags/v') 
+        && github.ref_type == 'tag' 
+        && env.IS_LAST_JOB
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-output
+        path: dist/${{ github.event.repository.name }}-${{ github.ref_name }}.zip
+          
+    - name: Run Makefile 'down' task
+      run: make down
