@@ -4,6 +4,7 @@
 include .env
 
 PLUGIN_NAME ?= acf-uppy
+PLUGIN_VERSION ?= $(if $(GITHUB_ACTIONS),${{ github.ref }},)
 
 MARIADB_TAG ?= latest
 MARIADB_ALLOW_EMPTY_PASSWORD ?= yes
@@ -57,7 +58,7 @@ OPENAI_KEY ?=
 
 PHPSTAN_PRO_WEB_PORT ?=
 
-GITHUB_TOKEN ?=
+GITHUB_TOKEN ?= $(if $(GITHUB_ACTIONS),${{ secrets.GITHUB_TOKEN }},)
 
 MODE ?= develop
 
@@ -80,8 +81,10 @@ install: all wait install-node install-wordpress
 test: setup test-node test-wordpress
 
 deploy: install test deploy-zip
+ifeq ($(filter $(GITHUB_ACTIONS),false),false)
 ifeq ($(MODE),production)
 	$(MAKE) deploy-svn
+endif
 endif
 
 check:
@@ -90,8 +93,10 @@ check:
 	@command -v git >/dev/null 2>&1 || { echo >&2 "git is required but not installed. Aborting."; exit 1; }
 	@command -v rsync >/dev/null 2>&1 || { echo >&2 "rsync is required but not installed. Aborting."; exit 1; }
 	@command -v zip >/dev/null 2>&1 || { echo >&2 "zip is required but not installed. Aborting."; exit 1; }
+ifeq ($(filter $(GITHUB_ACTIONS),false),false)
 ifeq ($(MODE),production)
 	@command -v svn >/dev/null 2>&1 || { echo >&2 "svn is required but not installed. Aborting."; exit 1; }
+endif
 endif
 
 .gitconfig: 
@@ -117,18 +122,19 @@ $(TMP_DIR)/wait-for-it.sh:
 
 set-env:
 	@echo "Setting environment variables"
+ifeq ($(PLUGIN_VERSION),)
 	@$(eval PLUGIN_VERSION := $(shell git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//'))
 	@if [ -z "$(PLUGIN_VERSION)" ]; then \
 		echo "No git tags found. Please create a tag before running make."; \
 		exit 1; \
 	fi
+endif
 
 wait:
 	@echo "Waiting for services to be ready"
 	@$(TMP_DIR)/wait-for-it.sh localhost:80 --timeout=300 --strict -- echo "WordPress is up"
 	@$(TMP_DIR)/wait-for-it.sh localhost:$(NODE_PORT) --timeout=300 --strict -- echo "Node is up"
 
-ifneq ($(MODE),github)
 	@echo "Waiting for WordPress to complete setup"
 	@#https://cardinalby.github.io/blog/post/github-actions/implementing-deferred-steps/
 	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'timeout=300; while [ $$timeout -gt 0 ]; do \
@@ -137,7 +143,6 @@ ifneq ($(MODE),github)
 		sleep 5; timeout=$$((timeout - 5)); \
 	done; \
 	[ $$timeout -gt 0 ] || { echo "Error: Timeout reached, wp-config.php not found"; exit 1; }'
-endif
 
 up:
 	@echo "Starting docker compose services"
@@ -160,6 +165,10 @@ endif
 	@echo "[wordpress] Initializing git repository ($(MODE))"
 	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'cd /tmp/$(PLUGIN_NAME)-plugin && { \
 		git init; \
+		git config --global user.email "you@example.com"; \
+		git config --global user.name "Your Name"; \
+		# required by Github
+		#FIXED: fatal: detected dubious ownership in repository
 		git config --global --add safe.directory /tmp/$(PLUGIN_NAME)-plugin; \
 	}'
 	
