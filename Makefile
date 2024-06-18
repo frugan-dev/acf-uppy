@@ -250,7 +250,9 @@ deploy-svn:
 
 clean-node: 
 	@echo "[node] Cleaning artifacts"
-	@chmod -R +w build/front/node_modules build/front/package-lock.json $(PLUGIN_NAME)/asset
+	@if [ -d "build/front/node_modules" ]; then chmod -R +w build/front/node_modules; fi
+	@if [ -f "build/front/package-lock.json" ]; then chmod +w build/front/package-lock.json; fi
+	@if [ -d "$(PLUGIN_NAME)/asset" ]; then chmod -R +w $(PLUGIN_NAME)/asset; fi
 	@rm -rf build/front/node_modules build/front/package-lock.json $(PLUGIN_NAME)/asset
 
 clean-wordpress: 
