@@ -34,14 +34,14 @@ jobs:
         docker volume prune -af || true
         docker container prune -f || true
 
-    #- name: Cache Docker layers
-    #  uses: actions/cache@v4
-    #  with:
-    #    path: /tmp/.buildx-cache
-    #    key: ${{ runner.os }}-buildx-${{ matrix.mariadb_tag }}-${{ matrix.wordpress_tag }}-${{ matrix.node_tag }}-${{ hashFiles('**/Dockerfile') }}
-    #    restore-keys: |
-    #      ${{ runner.os }}-buildx-${{ matrix.mariadb_tag }}-${{ matrix.wordpress_tag }}-${{ matrix.node_tag }}-
-#
+    - name: Cache Docker layers
+      uses: actions/cache@v4
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-buildx-${{ matrix.mariadb_tag }}-${{ matrix.wordpress_tag }}-${{ matrix.node_tag }}-${{ hashFiles('**/Dockerfile') }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-${{ matrix.mariadb_tag }}-${{ matrix.wordpress_tag }}-${{ matrix.node_tag }}-
+
     - name: Cache npm modules
       uses: actions/cache@v4
       with:

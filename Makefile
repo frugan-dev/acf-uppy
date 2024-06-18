@@ -254,7 +254,9 @@ clean-node:
 
 clean-wordpress: 
 	@echo "[wordpress] Cleaning artifacts"
-	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'cd $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/plugins/$(PLUGIN_NAME) && rm -rf .git vendor composer.lock && find symlink -mindepth 1 -maxdepth 1 -type d | xargs rm -rf'
+	@if [ -d "$(PLUGIN_NAME)" ]; then \
+		$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'cd $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/plugins/$(PLUGIN_NAME) && rm -rf .git vendor composer.lock && find symlink -mindepth 1 -maxdepth 1 -type d | xargs rm -rf'; \
+	fi
 	@rm -rf $(DIST_DIR)/*
 
 down: 
