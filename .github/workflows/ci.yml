@@ -29,9 +29,9 @@ jobs:
     - name: Set up Docker
       uses: docker/setup-buildx-action@v1
 
-    - name: Remove Docker volumes
+    - name: Prune Docker volumes
       run: |
-        docker volume rm mariadb_data wordpress_data mailpit_data || true
+        docker volume prune -af || true
 
     - name: Cache Docker layers
       uses: actions/cache@v4
