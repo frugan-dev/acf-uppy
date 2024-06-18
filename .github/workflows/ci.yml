@@ -78,17 +78,12 @@ jobs:
       run: |
         make install-node install-wordpress \
           MODE=github \
-          MARIADB_TAG=$MARIADB_TAG \
-          WORDPRESS_TAG=$WORDPRESS_TAG \
-          NODE_TAG=$NODE_TAG
+          GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
 
     - name: Run Makefile 'test' task
       run: |
         make test \
-          MODE=github \
-          MARIADB_TAG=$MARIADB_TAG \
-          WORDPRESS_TAG=$WORDPRESS_TAG \
-          NODE_TAG=$NODE_TAG
+          MODE=github
           
     - name: Run Makefile 'down' task
       run: |
