@@ -9,6 +9,6 @@
 + vendor/
 - vendor/bin/
 + vendor/**
-+ README.txt
++ readme.txt
 + acf-uppy.php
 - *
