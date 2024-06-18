@@ -59,7 +59,9 @@ OPENAI_KEY ?=
 PHPSTAN_PRO_WEB_PORT ?=
 
 ifeq ($(GITHUB_ACTIONS),true)
-GITHUB_TOKEN ?= ${{ secrets.GITHUB_TOKEN }}
+ifeq ($(GITHUB_TOKEN),)
+GITHUB_TOKEN := ${{ secrets.GITHUB_TOKEN }}
+endif
 endif
 
 MODE ?= develop
