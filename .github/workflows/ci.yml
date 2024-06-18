@@ -102,7 +102,7 @@ jobs:
         && github.ref_type == 'tag' 
         && env.IS_LAST_JOB
       run: |
-        make install deploy \
+        make deploy \
           MODE=production \
           MARIADB_TAG=$MARIADB_TAG \
           WORDPRESS_TAG=$WORDPRESS_TAG \

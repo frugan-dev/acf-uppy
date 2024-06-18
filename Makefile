@@ -80,7 +80,7 @@ install: all wait install-node install-wordpress
 
 test: setup test-node test-wordpress
 
-deploy: setup deploy-zip
+deploy: install deploy-zip
 ifeq ($(filter $(GITHUB_ACTIONS),false),false)
 ifeq ($(MODE),production)
 	$(MAKE) deploy-svn
