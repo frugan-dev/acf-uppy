@@ -2,6 +2,14 @@
 ;https://stackoverflow.com/a/18330114
 ;https://gist.github.com/pksunkara/988716
 ;https://dev.to/tomerbendavid/git-configurations-2ngi
+;https://spin.atomicobject.com/git-configurations-default/
 
 [core]
     autocrlf = input
+    symlinks = false
+
+[fetch]
+    prune = true
+
+[pull]
+    rebase = true
