@@ -59,7 +59,8 @@ jobs:
         make \
           MARIADB_TAG=$MARIADB_TAG \
           WORDPRESS_TAG=$WORDPRESS_TAG \
-          NODE_TAG=$NODE_TAG
+          NODE_TAG=$NODE_TAG \
+          PLUGIN_VERSION=${{ github.ref_name }}
 
     #https://cardinalby.github.io/blog/post/github-actions/implementing-deferred-steps/
     #- name: Wait for WordPress setup to complete
@@ -78,10 +79,14 @@ jobs:
         make install \
           MARIADB_TAG=$MARIADB_TAG \
           WORDPRESS_TAG=$WORDPRESS_TAG \
-          NODE_TAG=$NODE_TAG
+          NODE_TAG=$NODE_TAG \
+          GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} \
+          PLUGIN_VERSION=${{ github.ref_name }}
 
     - name: Run Makefile 'test' task
-      run: make test
+      run: |
+        make test \
+          PLUGIN_VERSION=${{ github.ref_name }}
           
     - name: Run Makefile 'down' task
       run: make down

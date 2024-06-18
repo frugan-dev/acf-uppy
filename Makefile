@@ -4,7 +4,7 @@
 include .env
 
 PLUGIN_NAME ?= acf-uppy
-PLUGIN_VERSION ?= $(if $(GITHUB_ACTIONS),${{ github.ref }},)
+PLUGIN_VERSION ?=
 
 MARIADB_TAG ?= latest
 MARIADB_ALLOW_EMPTY_PASSWORD ?= yes
@@ -58,11 +58,7 @@ OPENAI_KEY ?=
 
 PHPSTAN_PRO_WEB_PORT ?=
 
-ifeq ($(GITHUB_ACTIONS),true)
-ifeq ($(GITHUB_TOKEN),)
-GITHUB_TOKEN := ${{ secrets.GITHUB_TOKEN }}
-endif
-endif
+GITHUB_TOKEN ?=
 
 MODE ?= develop
 
