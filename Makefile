@@ -163,7 +163,7 @@ endif
 		#git config user.email "you@example.com"; \
 		#git config user.name "Your Name"; \
 		# required by Github
-		#FIXED: fatal: detected dubious ownership in repository at '/tmp/$(PLUGIN_NAME)-plugin'
+		#FIXED: fatal: detected dubious ownership in repository
 		git config --global --add safe.directory /tmp/$(PLUGIN_NAME)-plugin; \
 	}'
 	
