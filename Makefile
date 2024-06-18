@@ -1,3 +1,4 @@
+#https://stackoverflow.com/a/44061904/3929620
 .PHONY: all install test deploy setup check set-env wait up install-node install-wordpress test-node test-wordpress deploy-develop deploy-production clean-node clean-wordpress down help
 
 include .env
@@ -85,7 +86,6 @@ endif
 
 check:
 	@echo "Checking requirements"
-	@#https://stackoverflow.com/a/44061904/3929620
 	@command -v curl >/dev/null 2>&1 || { echo >&2 "curl is required but not installed. Aborting."; exit 1; }
 	@command -v git >/dev/null 2>&1 || { echo >&2 "git is required but not installed. Aborting."; exit 1; }
 	@command -v rsync >/dev/null 2>&1 || { echo >&2 "rsync is required but not installed. Aborting."; exit 1; }
@@ -118,9 +118,10 @@ $(TMP_DIR)/wait-for-it.sh:
 set-env:
 	@echo "Setting environment variables"
 	@$(eval PLUGIN_VERSION := $(shell git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//'))
-ifeq ($(PLUGIN_VERSION),)
-	$(error No git tags found. Please create a tag before running make.)
-endif
+	@if [ -z "$(PLUGIN_VERSION)" ]; then \
+		echo "No git tags found. Please create a tag before running make."; \
+		exit 1; \
+	fi
 
 wait:
 	@echo "Waiting for services to be ready"
@@ -220,7 +221,8 @@ deploy-zip:
 deploy-svn:
 	@echo "Deploying to WordPress SVN"
 	@if ! svn ls https://plugins.svn.wordpress.org/$(PLUGIN_NAME)/ >/dev/null 2>&1; then \
-		$(error SVN repository does not exist. Aborting.); \
+		echo "SVN repository does not exist. Aborting."; \
+		exit 1; \
 	fi
 	@svn checkout https://plugins.svn.wordpress.org/$(PLUGIN_NAME)/ $(TMP_DIR)/$(SVN_DIR)
 	@rsync -av --delete $(DIST_DIR)/$(PLUGIN_NAME)-$(PLUGIN_VERSION) $(TMP_DIR)/$(SVN_DIR)/trunk/
