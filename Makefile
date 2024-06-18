@@ -160,10 +160,6 @@ endif
 	@echo "[wordpress] Initializing git repository ($(MODE))"
 	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'cd /tmp/$(PLUGIN_NAME)-plugin && { \
 		git init; \
-		#git config user.email "you@example.com"; \
-		#git config user.name "Your Name"; \
-		# required by Github
-		#FIXED: fatal: detected dubious ownership in repository
 		git config --global --add safe.directory /tmp/$(PLUGIN_NAME)-plugin; \
 	}'
 	
