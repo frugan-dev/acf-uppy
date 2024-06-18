@@ -128,7 +128,7 @@ wait:
 	@$(TMP_DIR)/wait-for-it.sh localhost:$(NODE_PORT) --timeout=300 --strict -- echo "Node is up"
 	
 	@echo "Waiting for WordPress to complete setup"
-	@$(DOCKER_COMPOSE) exec -it -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'timeout=300; while [ $$timeout -gt 0 ]; do [ -f $${WORDPRESS_CONF_FILE:-/bitnami/wordpress/wp-config.php} ] && break; echo "Waiting for wp-config.php ($$timeout seconds left)..."; sleep 5; timeout=$$((timeout - 5)); done; [ $$timeout -gt 0 ]'
+	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'timeout=300; while [ $$timeout -gt 0 ]; do [ -f $${WORDPRESS_CONF_FILE:-/bitnami/wordpress/wp-config.php} ] && break; echo "Waiting for wp-config.php ($$timeout seconds left)..."; sleep 5; timeout=$$((timeout - 5)); done; [ $$timeout -gt 0 ] || { echo "Error: Timeout reached, wp-config.php not found"; }'
 
 up:
 	@echo "Starting docker compose services"
