@@ -170,7 +170,7 @@ endif
 	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'ln -sfn /tmp/$(PLUGIN_NAME)-plugin/tests/data/wp-cfm $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/config'
 	
 	@echo "[wordpress] Initializing git repository ($(MODE))"
-	#FIXED: safe.directory avoids Github fatal error: detected dubious ownership in repository
+	@#FIXED: safe.directory avoids Github fatal error: detected dubious ownership in repository
 	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'cd /tmp/$(PLUGIN_NAME)-plugin && { \
 		git init; \
 		git config --global user.email "you@example.com"; \
@@ -250,6 +250,7 @@ deploy-svn:
 
 clean-node: 
 	@echo "[node] Cleaning artifacts"
+	@chmod -R +w build/front/node_modules build/front/package-lock.json $(PLUGIN_NAME)/asset
 	@rm -rf build/front/node_modules build/front/package-lock.json $(PLUGIN_NAME)/asset
 
 clean-wordpress: 
