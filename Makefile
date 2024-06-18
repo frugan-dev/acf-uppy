@@ -66,7 +66,7 @@ WORDPRESS_CONTAINER_NAME=wordpress
 WORDPRESS_CONTAINER_USER=root
 NODE_CONTAINER_NAME=node
 NODE_CONTAINER_USER=root
-NODE_CONTAINER_BUILD_DIR=/app/build
+NODE_CONTAINER_WORKSPACE_DIR=/app
 TMP_DIR=tmp
 DIST_DIR=dist
 SVN_DIR=svn
@@ -157,7 +157,7 @@ up:
 
 install-node: clean-node
 	@echo "[node] Installing dependencies"
-	@$(DOCKER_COMPOSE) exec -u$(NODE_CONTAINER_USER) $(NODE_CONTAINER_NAME) sh -c 'cd $(NODE_CONTAINER_BUILD_DIR)/front && npm install && npm run develop && npm run production && chmod -R +w node_modules package-lock.json'
+	@$(DOCKER_COMPOSE) exec -u$(NODE_CONTAINER_USER) $(NODE_CONTAINER_NAME) sh -c 'cd $(NODE_CONTAINER_WORKSPACE_DIR)/build/front && npm install && npm run develop && npm run production'
 
 install-wordpress: clean-wordpress
 ifneq ($(GITHUB_TOKEN),)
@@ -221,7 +221,7 @@ endif
 
 test-node:
 	@echo "[node] Running tests"
-	@$(DOCKER_COMPOSE) exec -u$(NODE_CONTAINER_USER) $(NODE_CONTAINER_NAME) sh -c 'cd $(NODE_CONTAINER_BUILD_DIR)/front && npm run test'
+	@$(DOCKER_COMPOSE) exec -u$(NODE_CONTAINER_USER) $(NODE_CONTAINER_NAME) sh -c 'cd $(NODE_CONTAINER_WORKSPACE_DIR)/build/front && npm run test'
 
 test-wordpress:
 	@echo "[wordpress] Updating git repository"
@@ -250,7 +250,7 @@ deploy-svn:
 
 clean-node: 
 	@echo "[node] Cleaning artifacts"
-	@rm -rf build/front/node_modules build/front/package-lock.json $(PLUGIN_NAME)/asset
+	@$(DOCKER_COMPOSE) exec -u$(NODE_CONTAINER_USER) $(NODE_CONTAINER_NAME) sh -c 'cd $(NODE_CONTAINER_WORKSPACE_DIR) && rm -rf build/front/node_modules build/front/package-lock.json $(PLUGIN_NAME)/asset'
 
 clean-wordpress: 
 	@echo "[wordpress] Cleaning artifacts"
