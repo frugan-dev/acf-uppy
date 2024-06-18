@@ -157,7 +157,7 @@ up:
 
 install-node: clean-node
 	@echo "[node] Installing dependencies"
-	@$(DOCKER_COMPOSE) exec -u$(NODE_CONTAINER_USER) $(NODE_CONTAINER_NAME) sh -c 'cd $(NODE_CONTAINER_BUILD_DIR)/front && npm install && npm run develop && npm run production'
+	@$(DOCKER_COMPOSE) exec -u$(NODE_CONTAINER_USER) $(NODE_CONTAINER_NAME) sh -c 'cd $(NODE_CONTAINER_BUILD_DIR)/front && npm install && npm run develop && npm run production && chmod -R +w node_modules package-lock.json'
 
 install-wordpress: clean-wordpress
 ifneq ($(GITHUB_TOKEN),)
@@ -250,9 +250,6 @@ deploy-svn:
 
 clean-node: 
 	@echo "[node] Cleaning artifacts"
-	@if [ -d "build/front/node_modules" ]; then chmod -R +w build/front/node_modules; fi
-	@if [ -f "build/front/package-lock.json" ]; then chmod +w build/front/package-lock.json; fi
-	@if [ -d "$(PLUGIN_NAME)/asset" ]; then chmod -R +w $(PLUGIN_NAME)/asset; fi
 	@rm -rf build/front/node_modules build/front/package-lock.json $(PLUGIN_NAME)/asset
 
 clean-wordpress: 
