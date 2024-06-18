@@ -56,7 +56,11 @@ services:
 
   node:
     container_name: node
-    image: docker.io/bitnami/node:${NODE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.node
+      args:
+        NODE_TAG: ${NODE_TAG:-latest}
     ports:
       - ${NODE_PORT:-3000}:3000
     volumes:

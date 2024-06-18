@@ -132,7 +132,7 @@ wait:
 
 up:
 	@echo "Starting docker compose services"
-	@MARIADB_TAG=${MARIADB_TAG} WORDPRESS_TAG=${WORDPRESS_TAG} NODE_TAG=${NODE_TAG} $(DOCKER_COMPOSE) up -d
+	@MARIADB_TAG=${MARIADB_TAG} WORDPRESS_TAG=${WORDPRESS_TAG} NODE_TAG=${NODE_TAG} $(DOCKER_COMPOSE) up -d --build
 
 install-node: clean-node
 	@echo "[node] Installing dependencies"
