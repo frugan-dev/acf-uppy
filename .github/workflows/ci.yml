@@ -37,7 +37,9 @@ jobs:
     - name: Install mkcert
       run: |
         sudo apt-get update && sudo apt-get install libnss3-tools
-        wget -q -O - https://mkcert.dev/install.sh | sudo bash 
+        curl -JLO "https://dl.filippo.io/mkcert/latest?for=linux/amd64"
+        chmod +x mkcert-v*-linux-amd64
+        sudo cp mkcert-v*-linux-amd64 /usr/local/bin/mkcert
 
     # method #2
     #- name: Generate self-signed CA
