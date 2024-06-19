@@ -102,7 +102,8 @@ jobs:
 
     - name: Debug
       run: |
-        docker compose exec -uroot wordpress ls -la /bitnami/wordpress/wp-content/plugins
+        docker ps -a
+        docker compose logs -f wordpress
 
     #https://cardinalby.github.io/blog/post/github-actions/implementing-deferred-steps/
     #- name: Wait for WordPress setup to complete
