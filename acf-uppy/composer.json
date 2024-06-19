@@ -4,9 +4,9 @@
     "license": "GPL-3.0-or-later",
     "type": "wordpress-plugin",
     "require": {
-        "php": "^7.4",
-        "ankitpokhrel/tus-php": "2.3.0",
-        "apfelbox/php-file-download": "^2.1"
+        "php": "^8.0",
+        "ankitpokhrel/tus-php": "^2.3",
+        "diversen/http-send-file": "^3.1"
     },
     "require-dev": {
         "composer/installers": "^1.0 || ^2.0",
@@ -14,16 +14,15 @@
         "friendsofphp/php-cs-fixer": "^3.58",
         "frugan-dev/acf-repeater": "^2.1",
         "hoppinger/advanced-custom-fields-wpcli": "dev-master",
-        "jameelmoses/wordpress-kint-debugger": "^1.0",
+        "jameelmoses/wordpress-kint-debugger": "^2.0",
         "nikic/php-parser": "^5.0",
         "php-parallel-lint/php-parallel-lint": "^1.4",
-        "phpro/grumphp-shim": "^1.13",
+        "phpro/grumphp-shim": "^2.0",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^1.11",
         "povils/phpmnd": "^3.5",
         "rector/rector": "^1.1",
         "roave/security-advisories": "dev-latest",
-        "sensiolabs/security-checker": "^6.0",
         "szepeviktor/phpstan-wordpress": "^1.3",
         "wpackagist-plugin/acf-repeater-flexible-content-collapser": "^1.2",
         "wpackagist-plugin/advanced-custom-fields": "^5.9 || ^6.0",
@@ -69,7 +68,7 @@
         "check-platform-reqs": true,
         "optimize-autoloader": true,
         "platform": {
-            "php": "7.4.33"
+            "php": "8.0"
         },
         "sort-packages": true
     },

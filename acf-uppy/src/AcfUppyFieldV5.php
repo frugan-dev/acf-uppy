@@ -280,13 +280,11 @@ class AcfUppyFieldV5 extends \acf_field
     /**
      * This filter is applied to the $value before it is saved in the db.
      *
-     * @param mixed $value   the value found in the database
-     * @param mixed $post_id the $post_id from which the value was loaded
-     * @param array $field   the field array holding all the field options
+     * @param array $field the field array holding all the field options
      *
      * @return mixed
      */
-    public function update_value($value, $post_id, $field)
+    public function update_value(mixed $value, mixed $post_id, $field)
     {
         // ACF saves drafts without validation!
         // https://support.advancedcustomfields.com/forums/topic/is-it-possible-to-apply-validation-to-draft-post/
@@ -359,13 +357,12 @@ class AcfUppyFieldV5 extends \acf_field
      * This allows you to validate and return messages to the user if the value is not correct.
      *
      * @param bool   $valid validation status based on the value and the field's required setting
-     * @param mixed  $value the $_POST value
      * @param array  $field the field array holding all the field options
      * @param string $input the corresponding input name for $_POST value
      *
      * @return bool
      */
-    public function validate_value($valid, $value, $field, $input)
+    public function validate_value($valid, mixed $value, $field, $input)
     {
         $value = sanitize_file_name($value);
 
