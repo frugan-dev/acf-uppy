@@ -151,6 +151,11 @@ jobs:
         && env.IS_LAST_JOB
       uses: softprops/action-gh-release@v2
       with:
+        # https://github.com/softprops/action-gh-release
+        # Note that if you intend to run workflows on the release event (on: { release: { types: [published] } }),
+        # you need to use a personal access token for this action, as the default secrets.GITHUB_TOKEN does not trigger another workflow.
+        # See: https://github.com/actions/create-release/issues/71
+        token: ${{ secrets.PRIVATE_GITHUB_TOKEN }}
         files: dist/${{ github.event.repository.name }}-${{ env.PLUGIN_VERSION }}.zip
         generate_release_notes: true
           

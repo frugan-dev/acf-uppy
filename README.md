@@ -26,7 +26,7 @@ __ACF Uppy Field__ is a WordPress plugin that adds a new `Uppy` custom field to 
 
 <sub><i>
 _Note:_  
-_* If you need to support older versions of PHP use [v1.x](tree/support/v1.x)._  
+_* If you need to support older versions of PHP use [v1.x](../../tree/support/v1.x)._  
 _** If your environment doesn't support APCu, you can try setting the cache to `file` with the `acf_uppy/cache` filter, although `file` is not recommended in production (see [here](https://github.com/ankitpokhrel/tus-php/issues/408#issuecomment-1250229371))._
 </i></sub>
 
