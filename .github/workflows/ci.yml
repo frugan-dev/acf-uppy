@@ -46,13 +46,14 @@ jobs:
           ${{ runner.os }}-node-${{ matrix.node_tag }}-
 
     #https://stackoverflow.com/a/71334100/3929620
-    - name: Set GITHUB_ENV
+    - name: Set environment variables
       run: |
-        echo "PLUGIN_VERSION=$(echo \"${GITHUB_REF##*/}\" | sed 's/^v//')" >> $GITHUB_ENV
+        PLUGIN_VERSION=$(echo "${GITHUB_REF##*/}" | sed 's/^v//')
+        echo "PLUGIN_VERSION=$PLUGIN_VERSION" >> $GITHUB_ENV
         echo "IS_VALID_TAG=$([[ \"${GITHUB_REF##*/}\" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] && echo true)" >> $GITHUB_ENV
         echo "IS_LAST_JOB=$([ $(expr ${{ strategy.job-index }} + 1) = ${{ strategy.job-total }} ] && echo true)" >> $GITHUB_ENV
 
-    - name: Print variables
+    - name: Print environment variables
       run: |
         echo "PLUGIN_VERSION=${{ env.PLUGIN_VERSION }}"
         echo "IS_VALID_TAG=${{ env.IS_VALID_TAG }}"
