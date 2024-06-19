@@ -396,33 +396,7 @@ For your contributions please use:
 
 [<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" width="200" alt="Buy Me A Coffee">](https://buymeacoff.ee/frugan)
 
-<<<<<<< HEAD
-### Usefull links
-
-- https://www.advancedcustomfields.com/resources/creating-a-new-field-type/
-- https://github.com/AdvancedCustomFields/acf-field-type-template
-- http://youmightnotneedjquery.com
-- http://vanilla-js.com/
-- https://vanillajstoolkit.com
-- https://hacks.mozilla.org/2018/03/es-modules-a-cartoon-deep-dive/
-- https://dmitripavlutin.com/string-interpolation-in-javascript/
-- https://github.com/ankitpokhrel/tus-php/wiki/WordPress-Integration
-- https://github.com/transloadit/uppy/issues/179
-- https://dev.to/konsole/resumable-file-upload-in-php-handle-large-file-uploads-in-an-elegant-way-4a84
-- https://dev.to/oyetoket/fastest-way-to-generate-random-strings-in-javascript-2k5a
-- https://mortoray.com/2014/04/09/allowing-unlimited-access-with-cors/
-- https://www.html5rocks.com/en/tutorials/cors//
-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors/CORSNotSupportingCredentials#What_went_wrong
-- https://choosealicense.com
-- https://learnwithdaniel.com/2019/09/publishing-your-first-wordpress-plugin-with-git-and-svn/
-
-### License
-
-(ɔ) Copyleft 2021 [Frugan](https://about.me/frugan)
-[GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0/), see [COPYING](COPYING) file.
-=======
 ## License
 
 (ɔ) Copyleft 2024 [Frugan](https://frugan.it).  
 [GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0/), see [LICENSE](LICENSE) file.
->>>>>>> release/v1.0.0
