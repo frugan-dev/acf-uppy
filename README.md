@@ -49,7 +49,7 @@ You can install the plugin in three ways: manually, via Composer (package) or vi
 <details>
 <summary>Manual Installation</summary>
 
-1. Go to the [Releases](releases) section of this repository.
+1. Go to the [Releases](../../releases) section of this repository.
 2. Download the latest release zip file.
 3. Log in to your WordPress admin dashboard.
 4. Navigate to `Plugins` > `Add New`.
