@@ -2,11 +2,14 @@
 
 args=""
 while [ $# -gt 0 ]; do
-  case "$1" in
-    -i) shift ;; # nullmailer doesn't support this option
-    -t) shift ;; # nullmailer doesn't support this option
-    *) args="$args $1"; shift ;;
-  esac
+	case "$1" in
+	-i) shift ;; # nullmailer doesn't support this option
+	-t) shift ;; # nullmailer doesn't support this option
+	*)
+		args="$args $1"
+		shift
+		;;
+	esac
 done
 
-exec /usr/bin/nullmailer-inject $args
+exec /usr/bin/nullmailer-inject "$args"

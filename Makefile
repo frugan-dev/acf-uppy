@@ -143,13 +143,17 @@ wait:
 	@$(TMP_DIR)/wait-for-it.sh localhost:$(NODE_PORT) --timeout=300 --strict -- echo "Node is up"
 
 	@echo "Waiting for WordPress to complete setup"
-	@#https://cardinalby.github.io/blog/post/github-actions/implementing-deferred-steps/
-	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'timeout=300; while [ $$timeout -gt 0 ]; do \
-		[ -f $${WORDPRESS_CONF_FILE:-/bitnami/wordpress/wp-config.php} ] && break; \
-		echo "Waiting for wp-config.php ($$timeout seconds left)..."; \
-		sleep 5; timeout=$$((timeout - 5)); \
-	done; \
-	[ $$timeout -gt 0 ] || { echo "Error: Timeout reached, wp-config.php not found"; exit 1; }'
+#https://cardinalby.github.io/blog/post/github-actions/implementing-deferred-steps/
+# method #1
+#	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'timeout=300; while [ $$timeout -gt 0 ]; do \
+#		[ -f $${WORDPRESS_CONF_FILE:-/bitnami/wordpress/wp-config.php} ] && break; \
+#		echo "Waiting for wp-config.php ($$timeout seconds left)..."; \
+#		sleep 5; timeout=$$((timeout - 5)); \
+#	done; \
+#	[ $$timeout -gt 0 ] || { echo "Error: Timeout reached, wp-config.php not found"; exit 1; }'
+
+# method #2
+	@./docker/logs-catcher.sh $(WORDPRESS_CONTAINER_NAME) "WordPress setup finished" 180
 
 up:
 	@echo "Starting docker compose services"
@@ -165,25 +169,25 @@ ifneq ($(GITHUB_TOKEN),)
 	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'composer config -g github-oauth.github.com $(GITHUB_TOKEN)'
 endif
 
-	@echo "[wordpress] Creating symbolic links ($(MODE))"
-	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'ln -sfn /tmp/$(PLUGIN_NAME)-plugin $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/plugins/$(PLUGIN_NAME)'
-	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'ln -sfn /tmp/$(PLUGIN_NAME)-plugin/tests/data/wp-cfm $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/config'
-	
 	@echo "[wordpress] Initializing git repository ($(MODE))"
-	@#FIXED: safe.directory avoids Github fatal error: detected dubious ownership in repository
+#FIXED: safe.directory avoids Github fatal error: detected dubious ownership in repository
 	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'cd /tmp/$(PLUGIN_NAME)-plugin && { \
 		git init; \
 		git config --global user.email "you@example.com"; \
 		git config --global user.name "Your Name"; \
 		git config --global --add safe.directory /tmp/$(PLUGIN_NAME)-plugin; \
 	}'
+
+	@echo "[wordpress] Creating symbolic links ($(MODE))"
+	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'ln -sfn /tmp/$(PLUGIN_NAME)-plugin $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/plugins/$(PLUGIN_NAME)'
+	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'ln -sfn /tmp/$(PLUGIN_NAME)-plugin/tests/data/wp-cfm $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/config'
 	
 	@echo "[wordpress] Installing dependencies ($(MODE))"
-	@# PHP 7.x and 8.x interpret composer.json's `extra.installer-paths` differently, perhaps due to different versions of Composer.
-	@# With PHP 7.x `cd $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/plugins/$(PLUGIN_NAME)` and
-	@# `extra.installer-paths."../{$name}/"` in the composer.json seems to be sufficient, while with PHP 8.x it is not.
-	@# Adding Composer's `--working-dir` option with PHP 8.x doesn't work.
-	@# For this reason, the absolute path `extra.installer-paths` had to be specified in the composer.json.
+# PHP 7.x and 8.x interpret composer.json's `extra.installer-paths` differently, perhaps due to different versions of Composer.
+# With PHP 7.x `cd $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/plugins/$(PLUGIN_NAME)` and
+# `extra.installer-paths."../{$name}/"` in the composer.json seems to be sufficient, while with PHP 8.x it is not.
+# Adding Composer's `--working-dir` option with PHP 8.x doesn't work.
+# For this reason, the absolute path `extra.installer-paths` had to be specified in the composer.json.
 ifeq ($(MODE),production)
 	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'cd $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/plugins/$(PLUGIN_NAME) && composer install --optimize-autoloader --classmap-authoritative --no-dev --no-interaction'
 else
@@ -206,7 +210,7 @@ endif
 	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'wp rewrite flush --allow-root'
 
 	@echo "[wordpress] Changing folders permissions ($(MODE))"
-	@# avoids write permission errors when PHP writes w/ 1001 user
+# avoids write permission errors when PHP writes w/ 1001 user
 	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'chmod o+w /tmp/$(PLUGIN_NAME)-plugin/symlink'
 
 	@echo "[wordpress] Changing folders owner ($(MODE))"
@@ -215,7 +219,7 @@ endif
 	@echo "[wordpress] Changing wp-config.php permissions ($(MODE))"
 	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'chmod 666 $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-config.php'
 	
-	@#FIXME: nullmailer doesn't stay started
+#FIXME: nullmailer doesn't stay started
 	@echo "[wordpress] Starting nullmailer ($(MODE))"
 	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'service nullmailer start'
 
@@ -229,9 +233,9 @@ test-wordpress:
 	
 	@echo "[wordpress] Running tests"
 ifeq ($(GITHUB_ACTIONS),true)
-	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'cd $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/plugins/$(PLUGIN_NAME) && ./vendor/bin/grumphp run --no-interaction && ./vendor/bin/rector --ansi --clear-cache'
+	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'cd $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/plugins/$(PLUGIN_NAME) && ./vendor/bin/grumphp run --no-interaction'
 else
-	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'cd $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/plugins/$(PLUGIN_NAME) && ./vendor/bin/grumphp run && ./vendor/bin/rector --ansi --clear-cache'
+	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'cd $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/plugins/$(PLUGIN_NAME) && ./vendor/bin/grumphp run'
 endif
 
 deploy-zip:

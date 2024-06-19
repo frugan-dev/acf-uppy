@@ -1,8 +1,12 @@
 name: CD
 
 on:
+  push:
+    branches:
+      - 'master'
+      - 'support/*'
   release:
-    types: [created]
+    types: [published]
 
 jobs:
   deploy:
