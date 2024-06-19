@@ -17,6 +17,7 @@ jobs:
           latest
         ]
         wordpress_tag: [
+          5.9.3,
           latest
         ]
         node_tag: [

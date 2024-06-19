@@ -1,8 +1,9 @@
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/frugan-dev/acf-uppy/total)
-![Build Status](https://github.com/frugan-dev/acf-uppy/actions/workflows/ci.yml/badge.svg)
-![Open Issues](https://img.shields.io/github/issues/frugan-dev/acf-uppy)
+![GitHub Actions Workflow Status](https://github.com/frugan-dev/acf-uppy/actions/workflows/ci.yml/badge.svg)
+![GitHub Actions Workflow Status](https://github.com/frugan-dev/acf-uppy/actions/workflows/cd.yml/badge.svg)
+![GitHub Issues](https://img.shields.io/github/issues/frugan-dev/acf-uppy)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
-![Version](https://img.shields.io/github/v/release/frugan-dev/acf-uppy)
+![GitHub Release](https://img.shields.io/github/v/release/frugan-dev/acf-uppy)
 ![License](https://img.shields.io/github/license/frugan-dev/acf-uppy)
 <!--
 ![PHP Version](https://img.shields.io/packagist/php-v/frugan-dev/acf-uppy)
