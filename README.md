@@ -25,7 +25,8 @@ __ACF Uppy Field__ is a WordPress plugin that adds a new `Uppy` custom field to 
 - APCu *
 
 <sub><i>
-_* Note: If your environment doesn't support APCu, you can try setting the cache to `file` with the `acf_uppy/cache` filter, although `file` is not recommended in production (see [here](https://github.com/ankitpokhrel/tus-php/issues/408#issuecomment-1250229371))._
+_Note:_  
+_* If your environment doesn't support APCu, you can try setting the cache to `file` with the `acf_uppy/cache` filter, although `file` is not recommended in production (see [here](https://github.com/ankitpokhrel/tus-php/issues/408#issuecomment-1250229371))._
 </i></sub>
 
 ## Features
@@ -104,7 +105,8 @@ composer update
 ```
 
 <sub><i>
-_* Note: `composer/installers` might already be required by another dependency._
+_Note:_  
+_* `composer/installers` might already be required by another dependency._
 </i></sub>
 </details>
 
@@ -139,7 +141,8 @@ composer update
 ```
 
 <sub><i>
-_* Note: `composer/installers` might already be required by another dependency._
+_Note:_  
+_* `composer/installers` might already be required by another dependency._
 </i></sub>
 </details>
 
