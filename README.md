@@ -392,7 +392,7 @@ For your contributions please use:
 - [git-flow workflow](https://danielkummer.github.io/git-flow-cheatsheet/)
 - [conventional commits](https://www.conventionalcommits.org)
 
-## Support
+## Sponsor
 
 [<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" width="200" alt="Buy Me A Coffee">](https://buymeacoff.ee/frugan)
 

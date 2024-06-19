@@ -265,6 +265,6 @@ help:
 	@echo "Makefile targets:"
 	@echo "  all           - Start environment"
 	@echo "  install       - Start environment and install dependencies"
-	@echo "  test          - Start environment, install dependencies and run tests"
-	@echo "  deploy        - Start environment, install dependencies, run tests and deploy to $(MODE)"
+	@echo "  test          - Run tests"
+	@echo "  deploy        - Start environment, install dependencies and deploy to $(MODE)"
 	@echo "  down          - Stop environment"
