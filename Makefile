@@ -228,7 +228,11 @@ test-wordpress:
 	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'cd $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/plugins/$(PLUGIN_NAME) && git add .'
 	
 	@echo "[wordpress] Running tests"
+ifeq ($(GITHUB_ACTIONS),true)
 	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'cd $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/plugins/$(PLUGIN_NAME) && ./vendor/bin/grumphp run --no-interaction && ./vendor/bin/rector --ansi --clear-cache'
+else
+	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'cd $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/plugins/$(PLUGIN_NAME) && ./vendor/bin/grumphp run && ./vendor/bin/rector --ansi --clear-cache'
+endif
 
 deploy-zip:
 	@echo "Deploying to zip file"
