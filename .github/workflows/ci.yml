@@ -163,7 +163,7 @@ jobs:
         # See: https://github.com/actions/create-release/issues/71
         token: ${{ secrets.PRIVATE_GITHUB_TOKEN }}
         files: dist/${{ github.event.repository.name }}-${{ env.PLUGIN_VERSION }}.zip
-        target_commitish: ${{ github.ref_name }}
+        target_commitish: ${{ github.head_ref || github.ref_name }}
         generate_release_notes: true
           
     - name: Run Makefile 'down' task
