@@ -47,7 +47,7 @@ _** If your environment doesn't support APCu, you can try setting the cache to `
 
 ## Installation
 
-You can install the plugin in three ways: manually, via Composer (package) or via Composer (wpackagist) _(coming soon)_.
+You can install the plugin in three ways: manually, via Composer (wpackagist) _(coming soon)_ or via Composer (package).
 
 <details>
 <summary>Manual Installation</summary>
@@ -59,6 +59,42 @@ You can install the plugin in three ways: manually, via Composer (package) or vi
 5. Click `Upload Plugin`.
 6. Choose the downloaded zip file and click `Install Now`.
 
+</details>
+
+<details>
+<summary>Installation via Composer (wpackagist) (coming soon)</summary>
+
+If you use Composer to manage WordPress plugins, you can install it from [WordPress Packagist](https://wpackagist.org):
+
+1. Open your terminal.
+2. Navigate to the root directory of your WordPress installation.
+3. Ensure your `composer.json` file has the following configuration: *
+
+```json
+{
+    "require": {
+        "composer/installers": "^1.0 || ^2.0",
+        "wpackagist-plugin/acf-uppy": "^1.0"
+    },
+    "extra": {
+        "installer-paths": {
+            "wp-content/plugins/{$name}/": [
+               "type:wordpress-plugin"
+            ]
+        }
+    }
+}
+```
+4. Run the following command:
+
+```sh
+composer update
+```
+
+<sub><i>
+_Note:_  
+_* `composer/installers` might already be required by another dependency._
+</i></sub>
 </details>
 
 <details>
@@ -90,42 +126,6 @@ If you use Composer to manage WordPress plugins, you can install it from this re
             }
         }
     ],
-    "extra": {
-        "installer-paths": {
-            "wp-content/plugins/{$name}/": [
-               "type:wordpress-plugin"
-            ]
-        }
-    }
-}
-```
-4. Run the following command:
-
-```sh
-composer update
-```
-
-<sub><i>
-_Note:_  
-_* `composer/installers` might already be required by another dependency._
-</i></sub>
-</details>
-
-<details>
-<summary>Installation via Composer (wpackagist) (coming soon)</summary>
-
-If you use Composer to manage WordPress plugins, you can install it from [WordPress Packagist](https://wpackagist.org):
-
-1. Open your terminal.
-2. Navigate to the root directory of your WordPress installation.
-3. Ensure your `composer.json` file has the following configuration: *
-
-```json
-{
-    "require": {
-        "composer/installers": "^1.0 || ^2.0",
-        "wpackagist-plugin/acf-uppy": "^1.0"
-    },
     "extra": {
         "installer-paths": {
             "wp-content/plugins/{$name}/": [
