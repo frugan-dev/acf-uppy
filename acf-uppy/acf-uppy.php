@@ -17,10 +17,10 @@ use AcfUppy\AcfUppy;
  * Plugin Name: Advanced Custom Fields: Uppy
  * Plugin URI: https://github.com/frugan-dev/acf-uppy
  * Description: Uppy Field for Advanced Custom Fields
- * Version: 0.3.0
+ * Version: 1.0.1
  * Requires PHP: 7.4
- * Author: Frugan
- * Author URI: https://about.me/frugan
+ * Author: frugan
+ * Author URI: https://frugan.it
  * License: GPLv3 or later
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  */
@@ -32,7 +32,7 @@ if (file_exists(__DIR__.'/vendor/autoload.php')) {
     require __DIR__.'/vendor/autoload.php';
 }
 
-define('ACF_UPPY_VERSION', '0.3.0');
+define('ACF_UPPY_VERSION', '1.0.1');
 define('ACF_UPPY_NAME', dirname(plugin_basename(__FILE__)));
 define('ACF_UPPY_NAME_UNDERSCORE', str_replace('-', '_', ACF_UPPY_NAME));
 define('ACF_UPPY_FIELD_TYPE', 'uppy');
