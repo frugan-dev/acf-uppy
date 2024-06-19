@@ -100,12 +100,8 @@ jobs:
           PLUGIN_NAME=${{ github.event.repository.name }} \
           PLUGIN_VERSION=${{ env.PLUGIN_VERSION }}
 
-    - name: Debug
-      run: |
-        docker ps -a
-        docker compose logs -f wordpress
-
     #https://cardinalby.github.io/blog/post/github-actions/implementing-deferred-steps/
+    # method #1
     #- name: Wait for WordPress setup to complete
     #  run: |
     #    timeout=300
@@ -116,6 +112,11 @@ jobs:
     #      timeout=$((timeout - 5))
     #    done
     #    [ $timeout -gt 0 ] || { echo "Error: Timeout reached, wp-config.php not found"; exit 1; }
+
+    # method #2
+    - name: Wait for WordPress setup to complete
+      run: |
+        ./docker/logs-catcher.sh wordpress "WordPress setup finished!" 30
 
     - name: Run Makefile 'install' task
       run: |
