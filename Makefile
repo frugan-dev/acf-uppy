@@ -165,10 +165,6 @@ ifneq ($(GITHUB_TOKEN),)
 	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'composer config -g github-oauth.github.com $(GITHUB_TOKEN)'
 endif
 
-	@echo "[wordpress] Creating symbolic links ($(MODE))"
-	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'ln -sfn /tmp/$(PLUGIN_NAME)-plugin $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/plugins/$(PLUGIN_NAME)'
-	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'ln -sfn /tmp/$(PLUGIN_NAME)-plugin/tests/data/wp-cfm $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/config'
-	
 	@echo "[wordpress] Initializing git repository ($(MODE))"
 	@#FIXED: safe.directory avoids Github fatal error: detected dubious ownership in repository
 	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'cd /tmp/$(PLUGIN_NAME)-plugin && { \
@@ -177,6 +173,10 @@ endif
 		git config --global user.name "Your Name"; \
 		git config --global --add safe.directory /tmp/$(PLUGIN_NAME)-plugin; \
 	}'
+
+	@echo "[wordpress] Creating symbolic links ($(MODE))"
+	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'ln -sfn /tmp/$(PLUGIN_NAME)-plugin $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/plugins/$(PLUGIN_NAME)'
+	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'ln -sfn /tmp/$(PLUGIN_NAME)-plugin/tests/data/wp-cfm $${WORDPRESS_BASE_DIR:-/bitnami/wordpress}/wp-content/config'
 	
 	@echo "[wordpress] Installing dependencies ($(MODE))"
 	@# PHP 7.x and 8.x interpret composer.json's `extra.installer-paths` differently, perhaps due to different versions of Composer.
