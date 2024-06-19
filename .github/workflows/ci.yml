@@ -114,9 +114,9 @@ jobs:
     #    [ $timeout -gt 0 ] || { echo "Error: Timeout reached, wp-config.php not found"; exit 1; }
 
     # method #2
-    #- name: Wait for WordPress setup to complete
-    #  run: |
-    #    ./docker/logs-catcher.sh wordpress "WordPress setup finished" 180
+    - name: Wait for WordPress setup to complete
+      run: |
+        ./docker/logs-catcher.sh wordpress "WordPress setup finished" 180
 
     - name: Run Makefile 'install' task
       run: |
