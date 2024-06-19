@@ -17,7 +17,7 @@ use AcfUppy\Exception\ReadErrorException;
 use AcfUppy\Middleware\Auth;
 use AcfUppy\Middleware\UploadDir;
 use AcfUppy\Middleware\UploadMetadata;
-use Apfelbox\FileDownload\FileDownload;
+use Diversen\Sendfile;
 use TusPhp\Cache\AbstractCache;
 use TusPhp\Events\TusEvent;
 use TusPhp\Tus\Server;
@@ -262,10 +262,19 @@ class AcfUppy
 
                                     // https://stackoverflow.com/a/1395173/3929620
                                     // https://zinoui.com/blog/download-large-files-with-php
-                                    $fileDownload = FileDownload::createFromFilePath($destFile);
-                                    $fileDownload->sendDownload(basename($destFile));
+                                    // https://github.com/diversen/http-send-file
+                                    // https://github.com/apfelbox/PHP-File-Download
+                                    try {
+                                        (new Sendfile())->send($destFile);
 
-                                    exit;
+                                        exit;
+                                    } catch (\Exception $e) {
+                                        wp_die(
+                                            $e->getMessage(),
+                                            500,
+                                            ['back_link' => true]
+                                        );
+                                    }
                                 }
                             }
                         }

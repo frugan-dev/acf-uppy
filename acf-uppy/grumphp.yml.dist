@@ -30,14 +30,14 @@ grumphp:
             memory_limit: '-1'
 
         #https://www.php.net/supported-versions.php
-        #phpversion:
-        #    project: '7.4'
+        phpversion:
+            project: '8.0'
 
         #psalm:
         #    config: psalm.xml.dist
         #    show_info: true
 
-        #rector: ~
+        rector: ~
 
         securitychecker_roave:
             run_always: true

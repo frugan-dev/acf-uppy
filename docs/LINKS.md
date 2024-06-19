@@ -91,6 +91,10 @@
 - https://softwareengineering.stackexchange.com/a/439969
 - https://stackoverflow.com/a/16866118/3929620
 
+## Badges
+  
+- https://github.com/badges/awesome-badges
+
 ## License
 
 - https://choosealicense.com
