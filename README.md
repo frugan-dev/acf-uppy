@@ -74,7 +74,7 @@ If you use Composer to manage WordPress plugins, you can install it from [WordPr
 {
     "require": {
         "composer/installers": "^1.0 || ^2.0",
-        "wpackagist-plugin/acf-uppy": "^1.0"
+        "wpackagist-plugin/acf-uppy": "^2.0"
     },
     "extra": {
         "installer-paths": {
@@ -110,7 +110,7 @@ If you use Composer to manage WordPress plugins, you can install it from this re
 {
     "require": {
         "composer/installers": "^1.0 || ^2.0",
-        "frugan-dev/acf-uppy": "^1.0"
+        "frugan-dev/acf-uppy": "^2.0"
     },
     "repositories": [
         {
