@@ -100,6 +100,10 @@ jobs:
           PLUGIN_NAME=${{ github.event.repository.name }} \
           PLUGIN_VERSION=${{ env.PLUGIN_VERSION }}
 
+    - name: Debug
+      run: |
+        docker compose exec -uroot wordpress ls -la /bitnami/wordpress/wp-content/plugins
+
     #https://cardinalby.github.io/blog/post/github-actions/implementing-deferred-steps/
     #- name: Wait for WordPress setup to complete
     #  run: |
