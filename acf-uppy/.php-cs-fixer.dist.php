@@ -40,8 +40,8 @@ $config = (new Config())
         // https://mlocati.github.io/php-cs-fixer-configurator
         '@PhpCsFixer' => true,
         '@PhpCsFixer:risky' => true,
-        '@PHP74Migration' => true,
-        '@PHP74Migration:risky' => true,
+        '@PHP80Migration' => true,
+        '@PHP80Migration:risky' => true,
         'header_comment' => ['header' => $header],
     ])
     ->setFinder($finder)
