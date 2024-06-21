@@ -381,6 +381,17 @@ Default: `10`.
 
 </details>
 
+<details>
+<summary>acf_uppy/custom_post_types</summary>
+
+```php
+apply_filters( 'acf_uppy/custom_post_types', $postTypes );
+```
+- `$postTypes` _(array)_: The types of the post containing _ACF Uppy Field_.
+Default: `[]`.
+
+</details>
+
 ## More info
 
 See [LINKS](docs/LINKS.md) file.
