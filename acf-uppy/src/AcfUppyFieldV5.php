@@ -290,7 +290,9 @@ class AcfUppyFieldV5 extends \acf_field
         // https://support.advancedcustomfields.com/forums/topic/is-it-possible-to-apply-validation-to-draft-post/
         // https://github.com/AdvancedCustomFields/acf/blob/master/includes/forms/form-post.php#L311
         if (!empty($value) && empty($this->paths)) {
-            if (\in_array(get_post_type($post_id), ['post', 'page'], true)) {
+            $postTypes = array_merge(apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/custom_post_types', []), ['post', 'page']);
+
+            if (\in_array(get_post_type($post_id), $postTypes, true)) {
                 $post = get_post($post_id);
                 if ('draft' === $post->post_status) {
                     acf_validate_save_post();
