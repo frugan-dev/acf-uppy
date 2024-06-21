@@ -1,0 +1,29 @@
+#!/bin/bash
+
+default_sender="noreply@localhost"
+has_sender=false
+args=()
+
+while [ $# -gt 0 ]; do
+	case "$1" in
+	-i) shift ;; # nullmailer doesn't support this option
+	-t) shift ;; # nullmailer doesn't support this option
+	-f)
+		has_sender=true
+		args+=("$1" "$2")
+		shift 2
+		;;
+	*)
+		args+=("$1")
+		shift
+		;;
+	esac
+done
+
+if [ "$has_sender" = false ]; then
+	args=("-f" "$default_sender")
+fi
+
+echo "Called '/usr/bin/nullmailer-inject' with arguments: ${args[*]}" >>/dev/stdout
+
+exec /usr/bin/nullmailer-inject "${args[@]}"

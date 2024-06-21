@@ -15,7 +15,7 @@ services:
     container_name: wordpress
     build:
       context: .
-      dockerfile: docker/Dockerfile.wordpress
+      dockerfile: build/docker/Dockerfile.wordpress
       args:
         WORDPRESS_TAG: ${WORDPRESS_TAG:-latest}
         WORDPRESS_SMTP_HOST: ${WORDPRESS_SMTP_HOST:-mailpit}

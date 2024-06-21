@@ -153,7 +153,7 @@ wait:
 #	[ $$timeout -gt 0 ] || { echo "Error: Timeout reached, wp-config.php not found"; exit 1; }'
 
 # method #2
-	@./docker/logs-catcher.sh $(WORDPRESS_CONTAINER_NAME) "WordPress setup finished" 180
+	@./build/docker/logs-catcher.sh $(WORDPRESS_CONTAINER_NAME) "WordPress setup finished" 180
 
 up:
 	@echo "Starting docker compose services"
@@ -240,9 +240,9 @@ endif
 
 deploy-zip:
 	@echo "Deploying to zip file"
-	@mkdir -p $(DIST_DIR)/$(PLUGIN_NAME)-$(PLUGIN_VERSION)
-	@cd $(PLUGIN_NAME) && rsync -av --delete --exclude-from=exclude_from.txt --include-from=include_from.txt . ../$(DIST_DIR)/$(PLUGIN_NAME)-$(PLUGIN_VERSION)/
-	@cd $(DIST_DIR)/$(PLUGIN_NAME)-$(PLUGIN_VERSION) && zip -r ../$(PLUGIN_NAME)-$(PLUGIN_VERSION).zip .
+	@mkdir -p $(DIST_DIR)/$(PLUGIN_NAME)
+	@cd $(PLUGIN_NAME) && rsync -av --delete --exclude-from=exclude_from.txt --include-from=include_from.txt . ../$(DIST_DIR)/$(PLUGIN_NAME)/
+	@cd $(DIST_DIR)/$(PLUGIN_NAME) && zip -r ../$(PLUGIN_NAME).zip .
 
 deploy-svn:
 	@echo "Deploying to WordPress SVN"
@@ -251,10 +251,10 @@ deploy-svn:
 		exit 1; \
 	fi
 	@svn checkout https://plugins.svn.wordpress.org/$(PLUGIN_NAME)/ $(TMP_DIR)/$(SVN_DIR)
-	@rsync -av --delete $(DIST_DIR)/$(PLUGIN_NAME)-$(PLUGIN_VERSION) $(TMP_DIR)/$(SVN_DIR)/trunk/
+	@rsync -av --delete $(DIST_DIR)/$(PLUGIN_NAME) $(TMP_DIR)/$(SVN_DIR)/trunk/
 	@cd $(TMP_DIR)/$(SVN_DIR) && svn add --force * --auto-props --parents --depth infinity -q
 	@cd $(TMP_DIR)/$(SVN_DIR) && svn commit -m "new release $(PLUGIN_VERSION)"
-	@rm -rf $(TMP_DIR)/$(SVN_DIR) $(DIST_DIR)/$(PLUGIN_NAME)-$(PLUGIN_VERSION)
+	@rm -rf $(TMP_DIR)/$(SVN_DIR) $(DIST_DIR)/$(PLUGIN_NAME)
 
 clean-node: 
 	@echo "[node] Cleaning artifacts"

@@ -115,8 +115,7 @@ jobs:
 
     # method #2
     - name: Wait for WordPress setup to complete
-      run: |
-        ./docker/logs-catcher.sh wordpress "WordPress setup finished" 180
+      run: ./build/docker/logs-catcher.sh wordpress "WordPress setup finished" 180
 
     - name: Run Makefile 'install' task
       run: |
@@ -162,7 +161,7 @@ jobs:
         # you need to use a personal access token for this action, as the default secrets.GITHUB_TOKEN does not trigger another workflow.
         # See: https://github.com/actions/create-release/issues/71
         token: ${{ secrets.PRIVATE_GITHUB_TOKEN }}
-        files: dist/${{ github.event.repository.name }}-${{ env.PLUGIN_VERSION }}.zip
+        files: dist/${{ github.event.repository.name }}.zip
         generate_release_notes: true
           
     - name: Run Makefile 'down' task

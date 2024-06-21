@@ -116,10 +116,10 @@ If you use Composer to manage WordPress plugins, you can install it from this re
             "type": "package",
             "package": {
                 "name": "frugan-dev/acf-uppy",
-                "version": "1.0.1",
+                "version": "1.0.0",
                 "type": "wordpress-plugin",
                 "dist": {
-                    "url": "https://github.com/frugan-dev/acf-uppy/releases/download/v1.0.1/acf-uppy-1.0.1.zip",
+                    "url": "https://github.com/frugan-dev/acf-uppy/releases/download/v1.0.0/acf-uppy.zip",
                     "type": "zip"
                 }
             }
