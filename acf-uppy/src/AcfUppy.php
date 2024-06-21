@@ -133,16 +133,12 @@ class AcfUppy
             $wp->add_query_var(ACF_UPPY_NAME_UNDERSCORE.'_pubkey');
 
             // add_rewrite_tag( '%tus%', '([^&]+)' );
-            add_rewrite_rule('^'.apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/api_path', 'wp-tus').'/([^/]*)/?([^/]*)/?$', 'index.php?tus=$matches[1]', 'top');
-            add_rewrite_rule('^'.apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/base_path', ACF_UPPY_NAME).'/([^/]*)/?([0-9]{1,})/?([^/]*)/?$', 'index.php?'.ACF_UPPY_NAME_UNDERSCORE.'_action=$matches[1]&page_id=$matches[2]&'.ACF_UPPY_NAME_UNDERSCORE.'_pubkey=$matches[3]', 'top');
+            add_rewrite_rule('^'.apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/api_path', 'wp-tus').'/?([^/]*)/?([^/]*)/?$', 'index.php?tus=$matches[1]', 'top');
+            add_rewrite_rule('^'.apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/base_path', ACF_UPPY_NAME).'/([^/]+)/([0-9]{1,})/([^/]+)/?$', 'index.php?'.ACF_UPPY_NAME_UNDERSCORE.'_action=$matches[1]&page_id=$matches[2]&'.ACF_UPPY_NAME_UNDERSCORE.'_pubkey=$matches[3]', 'top');
         }, 0);
 
         add_action('parse_request', function ($wp): void {
-            if (!empty($wp->query_vars['pagename']) && $wp->query_vars['pagename'] !== apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/api_path', 'wp-tus')) {
-                return;
-            }
-
-            if (empty($wp->query_vars['pagename']) && empty($wp->query_vars['tus'])) {
+            if (!isset($wp->query_vars['tus'])) {
                 return;
             }
 
@@ -154,10 +150,6 @@ class AcfUppy
         }, 0);
 
         add_action('parse_request', function ($wp): void {
-            if (!empty($wp->query_vars['pagename']) && $wp->query_vars['pagename'] !== apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/base_path', ACF_UPPY_NAME)) {
-                return;
-            }
-
             if (empty($wp->query_vars[ACF_UPPY_NAME_UNDERSCORE.'_action']) || empty($wp->query_vars['page_id']) || empty($wp->query_vars[ACF_UPPY_NAME_UNDERSCORE.'_pubkey'])) {
                 return;
             }

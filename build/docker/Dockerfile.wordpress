@@ -28,7 +28,8 @@ ARG WORDPRESS_SMTP_USER
 ARG WORDPRESS_SMTP_PASSWORD
 ARG WORDPRESS_SMTP_PROTOCOL
 
-COPY docker/sendmail-wrapper /usr/sbin/sendmail-wrapper
+# method #1
+COPY build/docker/sendmail-wrapper /usr/sbin/sendmail-wrapper
 
 RUN echo "${WORDPRESS_SMTP_HOST} smtp \
     --port=${WORDPRESS_SMTP_PORT_NUMBER} \
@@ -48,6 +49,8 @@ RUN { \
         echo 'user_ini.cache_ttl = 0'; \
         #https://docs.bitnami.com/aws/infrastructure/lamp/administration/disable-cache/
         echo 'opcache.enable = 0'; \
+        # method #2
+        #echo 'sendmail_path = "/usr/bin/nullmailer-inject -f noreply@localhost"'; \
     } >> /opt/bitnami/php/etc/php.ini
 
 USER 1001

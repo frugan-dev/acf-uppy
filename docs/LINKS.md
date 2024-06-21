@@ -29,6 +29,8 @@
 
 ## WP Plugin Boilerplate
 
+- https://developer.wordpress.org/cli/commands/scaffold/plugin/
+- https://github.com/ptahdunbar/wp-skeleton-plugin
 - https://github.com/WPBP/WordPress-Plugin-Boilerplate-Powered
 - https://github.com/DevinVinson/WordPress-Plugin-Boilerplate
 - https://github.com/iandunn/WordPress-Plugin-Skeleton
