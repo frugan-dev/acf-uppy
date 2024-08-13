@@ -1,8 +1,7 @@
 ![](.wordpress-org/banner-1544x500.jpg)
 
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/frugan-dev/acf-uppy/total)
-![GitHub Actions Workflow Status](https://github.com/frugan-dev/acf-uppy/actions/workflows/ci.yml/badge.svg)
-![GitHub Actions Workflow Status](https://github.com/frugan-dev/acf-uppy/actions/workflows/cd.yml/badge.svg)
+![GitHub Actions Workflow Status](https://github.com/frugan-dev/acf-uppy/actions/workflows/main.yml/badge.svg)
 ![GitHub Issues](https://img.shields.io/github/issues/frugan-dev/acf-uppy)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
 ![GitHub Release](https://img.shields.io/github/v/release/frugan-dev/acf-uppy)

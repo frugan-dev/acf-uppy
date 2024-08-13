@@ -251,9 +251,14 @@ deploy-svn:
 		exit 1; \
 	fi
 	@svn $(SVN_AUTH) checkout https://plugins.svn.wordpress.org/$(PLUGIN_NAME)/ $(TMP_DIR)/$(SVN_DIR)
-	@rsync -av --delete $(DIST_DIR)/$(PLUGIN_NAME)/ $(TMP_DIR)/$(SVN_DIR)/trunk/
-	@rsync -av --delete $(SVN_ASSETS_DIR)/ $(TMP_DIR)/$(SVN_DIR)/assets/
+	@CURRENT_BRANCH=$$(git rev-parse --abbrev-ref HEAD); \
+	if [[ "$$CURRENT_BRANCH" != support/* ]]; then \
+		echo "Deploying to trunk and assets"; \
+		rsync -av --delete $(DIST_DIR)/$(PLUGIN_NAME)/ $(TMP_DIR)/$(SVN_DIR)/trunk/; \
+		rsync -av --delete $(SVN_ASSETS_DIR)/ $(TMP_DIR)/$(SVN_DIR)/assets/; \
+	fi	
 	@if [ ! -d "$(TMP_DIR)/$(SVN_DIR)/tags/$(PLUGIN_VERSION)" ]; then \
+		echo "Deploying to tags"; \
 		mkdir -p $(TMP_DIR)/$(SVN_DIR)/tags/$(PLUGIN_VERSION); \
 		rsync -av --delete $(DIST_DIR)/$(PLUGIN_NAME)/ $(TMP_DIR)/$(SVN_DIR)/tags/$(PLUGIN_VERSION)/; \
 	fi
