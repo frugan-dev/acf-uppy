@@ -7,6 +7,12 @@ grumphp:
 
         composer_normalize: ~
 
+        #phpcs:
+        #    standard: ['WordPress']
+        #    ignore_patterns:
+        #        - /^symlink\/(.*)/
+        #        - /^vendor\/(.*)/
+
         phpcsfixer:
             config: .php-cs-fixer.dist.php
 

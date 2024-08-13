@@ -1,3 +1,5 @@
+![](.wordpress-org/banner-1544x500.jpg)
+
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/frugan-dev/acf-uppy/total)
 ![GitHub Actions Workflow Status](https://github.com/frugan-dev/acf-uppy/actions/workflows/ci.yml/badge.svg)
 ![GitHub Actions Workflow Status](https://github.com/frugan-dev/acf-uppy/actions/workflows/cd.yml/badge.svg)
@@ -15,7 +17,7 @@
 
 __ACF Uppy Field__ is a WordPress plugin that adds a new `Uppy` custom field to the list of fields of the [Advanced Custom Fields](https://www.advancedcustomfields.com) plugin. This custom field allows you to __upload files of all types and sizes__ using the [TUS protocol](https://tus.io) and the [Uppy JS uploader](https://uppy.io), overcoming the limitations of the default ACF `File` field. With __ACF Uppy Field__, you no longer need to increase server-side INI parameters such as `upload_max_filesize`, `post_max_size`, `max_execution_time` and `memory_limit`.
 
-![](docs/img/demo.gif)
+![](docs/asset/demo.gif)
 
 ## Requirements
 
@@ -62,7 +64,7 @@ You can install the plugin in three ways: manually, via Composer (wpackagist) _(
 </details>
 
 <details>
-<summary>Installation via Composer (wpackagist) (coming soon)</summary>
+<summary>Installation via Composer "wpackagist" (coming soon)</summary>
 
 If you use Composer to manage WordPress plugins, you can install it from [WordPress Packagist](https://wpackagist.org):
 
@@ -74,7 +76,7 @@ If you use Composer to manage WordPress plugins, you can install it from [WordPr
 {
     "require": {
         "composer/installers": "^1.0 || ^2.0",
-        "wpackagist-plugin/acf-uppy": "^2.0"
+        "wpackagist-plugin/acf-uppy": "^2.1"
     },
     "extra": {
         "installer-paths": {
@@ -98,7 +100,7 @@ _* `composer/installers` might already be required by another dependency._
 </details>
 
 <details>
-<summary>Installation via Composer (package)</summary>
+<summary>Installation via Composer "package"</summary>
 
 If you use Composer to manage WordPress plugins, you can install it from this repository directly:
 
@@ -110,17 +112,17 @@ If you use Composer to manage WordPress plugins, you can install it from this re
 {
     "require": {
         "composer/installers": "^1.0 || ^2.0",
-        "frugan-dev/acf-uppy": "^2.0"
+        "frugan-dev/acf-uppy": "^2.1"
     },
     "repositories": [
         {
             "type": "package",
             "package": {
                 "name": "frugan-dev/acf-uppy",
-                "version": "2.0.0",
+                "version": "2.1.0",
                 "type": "wordpress-plugin",
                 "dist": {
-                    "url": "https://github.com/frugan-dev/acf-uppy/releases/download/v2.0.0/acf-uppy.zip",
+                    "url": "https://github.com/frugan-dev/acf-uppy/releases/download/v2.1.0/acf-uppy.zip",
                     "type": "zip"
                 }
             }

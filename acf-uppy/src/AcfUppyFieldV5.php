@@ -61,7 +61,7 @@ class AcfUppyFieldV5 extends \acf_field
             'debug' => WP_DEBUG,
             'locale' => get_locale(),
             'apiPath' => home_url('/'.apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/api_path', 'wp-tus')),
-            // 'error'	=> __('Error! Please enter a higher value', ACF_UPPY_NAME),
+            // 'error'  => __('Error! Please enter a higher value', ACF_UPPY_NAME),
         ];
 
         $this->server = $server;
@@ -84,39 +84,60 @@ class AcfUppyFieldV5 extends \acf_field
         //
         // More than one setting can be added by copy/paste the above code.
         // Please note that you must also have a matching $defaults value for the field name (font_size)
-        acf_render_field_setting($field, [
-            'label' => __('Max file size', ACF_UPPY_NAME),
-            'instructions' => implode('<br>'.PHP_EOL, [
-                sprintf(__('Default: %1$s', ACF_UPPY_NAME), '<code>'.$this->defaults['maxFileSize'].'</code>'),
-            ]),
-            'type' => 'number',
-            'name' => 'maxFileSize',
-            'append' => 'MB',
-            'min' => 0,
-            'step' => 1,
-        ]);
+        acf_render_field_setting(
+            $field,
+            [
+                'label' => __('Max file size', ACF_UPPY_NAME),
+                'instructions' => implode(
+                    '<br>'.PHP_EOL,
+                    [
+                        // translators: %1$s: maxFileSize
+                        \sprintf(__('Default: %1$s', ACF_UPPY_NAME), '<code>'.$this->defaults['maxFileSize'].'</code>'),
+                    ]
+                ),
+                'type' => 'number',
+                'name' => 'maxFileSize',
+                'append' => 'MB',
+                'min' => 0,
+                'step' => 1,
+            ]
+        );
 
-        acf_render_field_setting($field, [
-            'label' => __('Allowed file types', ACF_UPPY_NAME),
-            'instructions' => implode('<br>'.PHP_EOL, [
-                __('Wildcards mime types (e.g. image/*), exact mime types (e.g. image/jpeg), or file extensions (e.g. .jpg).', ACF_UPPY_NAME),
-                __('One value for each line.', ACF_UPPY_NAME),
-                sprintf(__('Default: %1$s', ACF_UPPY_NAME), '<code>'.$this->defaults['allowedFileTypes'].'</code>'),
-            ]),
-            'type' => 'textarea',
-            'name' => 'allowedFileTypes',
-        ]);
+        acf_render_field_setting(
+            $field,
+            [
+                'label' => __('Allowed file types', ACF_UPPY_NAME),
+                'instructions' => implode(
+                    '<br>'.PHP_EOL,
+                    [
+                        __('Wildcards mime types (e.g. image/*), exact mime types (e.g. image/jpeg), or file extensions (e.g. .jpg).', ACF_UPPY_NAME),
+                        __('One value for each line.', ACF_UPPY_NAME),
+                        // translators: %1$s: allowedFileTypes
+                        \sprintf(__('Default: %1$s', ACF_UPPY_NAME), '<code>'.$this->defaults['allowedFileTypes'].'</code>'),
+                    ]
+                ),
+                'type' => 'textarea',
+                'name' => 'allowedFileTypes',
+            ]
+        );
 
-        acf_render_field_setting($field, [
-            'label' => __('Uploads path', ACF_UPPY_NAME),
-            'instructions' => implode('<br>'.PHP_EOL, [
-                __('Absolute path to the directory where to save all files.', ACF_UPPY_NAME),
-                __('It can also be outside the public directory.', ACF_UPPY_NAME),
-                sprintf(__('Default: %1$s', ACF_UPPY_NAME), '<code>'.$this->defaults['destPath'].'</code>'),
-            ]),
-            'type' => 'text',
-            'name' => 'destPath',
-        ]);
+        acf_render_field_setting(
+            $field,
+            [
+                'label' => __('Uploads path', ACF_UPPY_NAME),
+                'instructions' => implode(
+                    '<br>'.PHP_EOL,
+                    [
+                        __('Absolute path to the directory where to save all files.', ACF_UPPY_NAME),
+                        __('It can also be outside the public directory.', ACF_UPPY_NAME),
+                        // translators: %1$s: destPath
+                        \sprintf(__('Default: %1$s', ACF_UPPY_NAME), '<code>'.$this->defaults['destPath'].'</code>'),
+                    ]
+                ),
+                'type' => 'text',
+                'name' => 'destPath',
+            ]
+        );
     }
 
     /**
@@ -156,26 +177,31 @@ class AcfUppyFieldV5 extends \acf_field
             }
         }
         ?>
-        <input type="hidden" name="<?php esc_attr_e($field['name']); ?>" value="<?php esc_attr_e(!empty($found) ? $field['value'] : ''); ?>">
-        <div class="UppyFileInput"
-             data-fieldName="<?php esc_attr_e($field['name']); ?>"
-             data-maxFileSize="<?php esc_attr_e((string) ($field['maxFileSize'] * 1024 * 1024)); ?>"
-             data-allowedFileTypes="<?php esc_attr_e($field['allowedFileTypes']); ?>">
-        </div>
-        <div class="UppyStatusBar"></div>
-        <div class="UppyInformer"></div>
-        <div class="UppyResponse">
-            <?php if (!empty($found)) { ?>
-                <a data-field-name="<?php esc_attr_e($field['name']); ?>" class="UppyDelete" href="javascript:;">
-                    <span class="dashicons dashicons-trash"></span>
-                </a>
-                <a href="<?php echo esc_url(
+		<input type="hidden" name="<?php esc_attr_e($field['name']); ?>" value="<?php esc_attr_e(!empty($found) ? $field['value'] : ''); ?>">
+		<div class="UppyFileInput"
+			data-fieldName="<?php esc_attr_e($field['name']); ?>"
+			data-maxFileSize="<?php esc_attr_e((string) ($field['maxFileSize'] * 1024 * 1024)); ?>"
+			data-allowedFileTypes="<?php esc_attr_e($field['allowedFileTypes']); ?>">
+		</div>
+		<div class="UppyStatusBar"></div>
+		<div class="UppyInformer"></div>
+		<div class="UppyResponse">
+			<?php if (!empty($found)) { ?>
+				<a data-field-name="<?php esc_attr_e($field['name']); ?>" class="UppyDelete" href="javascript:;">
+					<span class="dashicons dashicons-trash"></span>
+				</a>
+				<a href="
+				<?php
+                echo esc_url(
                     home_url('/'.apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/base_path', ACF_UPPY_NAME).'/download/'.trailingslashit($post->ID).trailingslashit($hash))
-                ); ?>"><?php esc_html_e($field['value']); ?></a> (<?php echo size_format((int) filesize($destFile), 2); ?>)
-            <?php }
-            ?>
-        </div>
-<?php
+                );
+			    ?>
+				"><?php esc_html_e($field['value']); ?></a> (<?php echo size_format((int) filesize($destFile), 2); ?>)
+				<?php
+			}
+        ?>
+		</div>
+		<?php
     }
 
     /**
@@ -188,6 +214,7 @@ class AcfUppyFieldV5 extends \acf_field
     {
         // register & include JS
         $paths = glob($this->settings['path'].'/asset/js'.(!empty(WP_DEBUG) ? '' : '/min').'/npm/*.js');
+
         if (false === $paths) {
             throw new ReadErrorException('error reading '.$this->settings['path'].'/asset/js'.(!empty(WP_DEBUG) ? '' : '/min').'/npm/*.js');
         }
@@ -204,6 +231,7 @@ class AcfUppyFieldV5 extends \acf_field
         }
 
         $paths = glob($this->settings['path'].'/asset/js'.(!empty(WP_DEBUG) ? '' : '/min').'/*.js');
+
         if (false === $paths) {
             throw new ReadErrorException('error reading '.$this->settings['path'].'/asset/js'.(!empty(WP_DEBUG) ? '' : '/min').'/*.js');
         }
@@ -247,6 +275,7 @@ class AcfUppyFieldV5 extends \acf_field
 
         // register & include CSS
         $paths = glob($this->settings['path'].'/asset/css'.(!empty(WP_DEBUG) ? '' : '/min').'/npm/*.css');
+
         if (false === $paths) {
             throw new ReadErrorException('error reading '.$this->settings['path'].'/asset/css'.(!empty(WP_DEBUG) ? '' : '/min').'/npm/*.css');
         }
@@ -262,6 +291,7 @@ class AcfUppyFieldV5 extends \acf_field
         }
 
         $paths = glob($this->settings['path'].'/asset/css'.(!empty(WP_DEBUG) ? '' : '/min').'/*.css');
+
         if (false === $paths) {
             throw new ReadErrorException($this->settings['path'].'/asset/css'.(!empty(WP_DEBUG) ? '' : '/min').'/*.css');
         }
@@ -294,6 +324,7 @@ class AcfUppyFieldV5 extends \acf_field
 
             if (\in_array(get_post_type($post_id), $postTypes, true)) {
                 $post = get_post($post_id);
+
                 if ('draft' === $post->post_status) {
                     acf_validate_save_post();
                 }
@@ -308,7 +339,8 @@ class AcfUppyFieldV5 extends \acf_field
             if (!empty($paths['tmp'])) {
                 if (basename($paths['tmp']) !== $value) {
                     wp_die(
-                        sprintf(
+                        \sprintf(
+                            // translators: %1$s: tmpPath, %2$s: file
                             __('Wrong tmpPath (%1$s) of file (%2$s)', ACF_UPPY_NAME),
                             $paths['tmp'],
                             $value
@@ -325,7 +357,8 @@ class AcfUppyFieldV5 extends \acf_field
 
                 if (false === wp_mkdir_p($destPath)) {
                     wp_die(
-                        sprintf(
+                        \sprintf(
+                            // translators: %1$s: destPath
                             __('Error creating destPath (%1$s)', ACF_UPPY_NAME),
                             $destPath
                         ),
@@ -335,9 +368,19 @@ class AcfUppyFieldV5 extends \acf_field
                 }
 
                 if (!empty($paths['tmp'])) {
-                    if (false === @rename($paths['tmp'], $paths['dest'])) {
+                    // https://wordpress.stackexchange.com/a/370377/99214
+                    if (!\function_exists('WP_Filesystem_Direct')) {
+                        require_once ABSPATH.'wp-admin/includes/class-wp-filesystem-base.php';
+
+                        require_once ABSPATH.'wp-admin/includes/class-wp-filesystem-direct.php';
+                    }
+
+                    $wpFilesystemDirect = new \WP_Filesystem_Direct(null);
+
+                    if (false === $wpFilesystemDirect->move($paths['tmp'], $paths['dest'])) {
                         wp_die(
-                            sprintf(
+                            \sprintf(
+                                // translators: %1$s: tmpPath, %2$s: destPath
                                 __('Error moving file from (%1$s) to (%2$s)', ACF_UPPY_NAME),
                                 $paths['tmp'],
                                 $paths['dest']
@@ -368,12 +411,14 @@ class AcfUppyFieldV5 extends \acf_field
     {
         $value = sanitize_file_name($value);
 
-        $postType = get_post_type($_POST['post_ID'] ?? $_POST['post_id']);
+        $postId = (int) ($_POST['post_ID'] ?? $_POST['post_id']);
+
+        $postType = get_post_type($postId);
 
         $tmpPath = trailingslashit($this->settings['tmpPath']).trailingslashit(sanitize_file_name($input));
 
-        $destPath = !empty($field['destPath']) ? trailingslashit($field['destPath']) : apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/dest_path/type='.$postType, trailingslashit($this->settings['destPath']), $_POST['post_ID'] ?? $_POST['post_id'], $field);
-        $destPath .= trailingslashit($_POST['post_ID'] ?? $_POST['post_id']).trailingslashit(sanitize_file_name($field['key']));
+        $destPath = !empty($field['destPath']) ? trailingslashit($field['destPath']) : apply_filters(ACF_UPPY_NAME_UNDERSCORE.'/dest_path/type='.$postType, trailingslashit($this->settings['destPath']), $postId, $field);
+        $destPath .= trailingslashit((string) $postId).trailingslashit(sanitize_file_name($field['key']));
 
         if (!empty($field['required']) && empty($value)) {
             $valid = false;
@@ -394,6 +439,7 @@ class AcfUppyFieldV5 extends \acf_field
                 $pathinfo = pathinfo($value);
 
                 $counter = 0;
+
                 while (file_exists($destPath.$value)) {
                     $value = apply_filters(
                         ACF_UPPY_NAME_UNDERSCORE.'/file_name_exists',

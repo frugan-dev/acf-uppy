@@ -44,6 +44,11 @@ $config = (new Config())
         '@PHP80Migration:risky' => true,
         'header_comment' => ['header' => $header],
     ])
+    // ->registerCustomFixers( [
+    //     new WeDevs\Fixer\SpaceInsideParenthesisFixer(),
+    //     new WeDevs\Fixer\BlankLineAfterClassOpeningFixer(),
+    //  ] )
+    // ->setRules( WeDevs\Fixer\Fixer::rules() )
     ->setFinder($finder)
 ;
 

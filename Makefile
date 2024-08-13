@@ -62,6 +62,7 @@ GITHUB_TOKEN ?=
 
 MODE ?= develop
 
+DOCKER_COMPOSE=docker compose
 WORDPRESS_CONTAINER_NAME=wordpress
 WORDPRESS_CONTAINER_USER=root
 NODE_CONTAINER_NAME=node
@@ -70,7 +71,9 @@ NODE_CONTAINER_WORKSPACE_DIR=/app
 TMP_DIR=tmp
 DIST_DIR=dist
 SVN_DIR=svn
-DOCKER_COMPOSE=docker compose
+SVN_ASSETS_DIR=.wordpress-org
+
+SVN_AUTH := $(if $(and $(SVN_USERNAME),$(SVN_PASSWORD)),--username $(SVN_USERNAME) --password $(SVN_PASSWORD),)
 
 all: setup up
 
@@ -81,10 +84,8 @@ install: all wait install-node install-wordpress
 test: setup test-node test-wordpress
 
 deploy: install deploy-zip
-ifeq ($(filter $(GITHUB_ACTIONS),false),false)
-ifeq ($(MODE),production)
-	$(MAKE) deploy-svn
-endif
+ifeq ($(and $(GITHUB_ACTIONS),$(MODE)),false production)
+	deploy-svn
 endif
 
 check:
@@ -93,10 +94,8 @@ check:
 	@command -v git >/dev/null 2>&1 || { echo >&2 "git is required but not installed. Aborting."; exit 1; }
 	@command -v rsync >/dev/null 2>&1 || { echo >&2 "rsync is required but not installed. Aborting."; exit 1; }
 	@command -v zip >/dev/null 2>&1 || { echo >&2 "zip is required but not installed. Aborting."; exit 1; }
-ifeq ($(filter $(GITHUB_ACTIONS),false),false)
-ifeq ($(MODE),production)
+ifeq ($(and $(GITHUB_ACTIONS),$(MODE)),true production)
 	@command -v svn >/dev/null 2>&1 || { echo >&2 "svn is required but not installed. Aborting."; exit 1; }
-endif
 endif
 
 .gitconfig: 
@@ -211,6 +210,7 @@ endif
 
 	@echo "[wordpress] Changing folders permissions ($(MODE))"
 # avoids write permission errors when PHP writes w/ 1001 user
+	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'chmod -Rf o+w /tmp/$(PLUGIN_NAME)-plugin/tests/data/wp-cfm'
 	@$(DOCKER_COMPOSE) exec -u$(WORDPRESS_CONTAINER_USER) $(WORDPRESS_CONTAINER_NAME) sh -c 'chmod o+w /tmp/$(PLUGIN_NAME)-plugin/symlink'
 
 	@echo "[wordpress] Changing folders owner ($(MODE))"
@@ -250,10 +250,15 @@ deploy-svn:
 		echo "SVN repository does not exist. Aborting."; \
 		exit 1; \
 	fi
-	@svn checkout https://plugins.svn.wordpress.org/$(PLUGIN_NAME)/ $(TMP_DIR)/$(SVN_DIR)
-	@rsync -av --delete $(DIST_DIR)/$(PLUGIN_NAME) $(TMP_DIR)/$(SVN_DIR)/trunk/
+	@svn $(SVN_AUTH) checkout https://plugins.svn.wordpress.org/$(PLUGIN_NAME)/ $(TMP_DIR)/$(SVN_DIR)
+	@rsync -av --delete $(DIST_DIR)/$(PLUGIN_NAME)/ $(TMP_DIR)/$(SVN_DIR)/trunk/
+	@rsync -av --delete $(SVN_ASSETS_DIR)/ $(TMP_DIR)/$(SVN_DIR)/assets/
+    @if [ ! -d "$(TMP_DIR)/$(SVN_DIR)/tags/$(PLUGIN_VERSION)" ]; then \
+        mkdir -p $(TMP_DIR)/$(SVN_DIR)/tags/$(PLUGIN_VERSION); \
+        rsync -av --delete $(DIST_DIR)/$(PLUGIN_NAME)/ $(TMP_DIR)/$(SVN_DIR)/tags/$(PLUGIN_VERSION)/; \
+    fi
 	@cd $(TMP_DIR)/$(SVN_DIR) && svn add --force * --auto-props --parents --depth infinity -q
-	@cd $(TMP_DIR)/$(SVN_DIR) && svn commit -m "new release $(PLUGIN_VERSION)"
+	@cd $(TMP_DIR)/$(SVN_DIR) && svn $(SVN_AUTH) commit -m "release $(PLUGIN_VERSION)"
 	@rm -rf $(TMP_DIR)/$(SVN_DIR) $(DIST_DIR)/$(PLUGIN_NAME)
 
 clean-node: 

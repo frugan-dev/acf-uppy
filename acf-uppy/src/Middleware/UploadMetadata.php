@@ -38,6 +38,7 @@ class UploadMetadata implements TusMiddleware
                 // $uploadMetadata = HeaderUtils::toString($uploadMetadataArr, ',');
 
                 $uploadMetadata = '';
+
                 foreach ($uploadMetadataArr as $key => $value) {
                     if (!empty($uploadMetadata)) {
                         $uploadMetadata .= ',';

@@ -14,15 +14,16 @@ declare(strict_types=1);
 use AcfUppy\AcfUppy;
 
 /*
- * Plugin Name: Advanced Custom Fields: Uppy
+ * Plugin Name: ACF Uppy Field
  * Plugin URI: https://github.com/frugan-dev/acf-uppy
  * Description: Uppy Field for Advanced Custom Fields
- * Version: 2.0.0
+ * Version: 2.1.0
  * Requires PHP: 8.0
- * Author: frugan
+ * Author: Frugan
  * Author URI: https://frugan.it
  * License: GPLv3 or later
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ * Donate link: https://buymeacoff.ee/frugan
  */
 if (!defined('ABSPATH')) {
     exit;

@@ -1,4 +1,4 @@
-name: CI
+name: Main
 
 on:
   push:
@@ -139,6 +139,9 @@ jobs:
         github.ref_type == 'tag' 
         && env.IS_VALID_TAG
         && env.IS_LAST_JOB
+      env:
+        SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+        SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
       run: |
         make deploy \
           MODE=production \

@@ -48,10 +48,18 @@
 - https://wordpress.org/plugins/wp-cfm/
 - https://stackoverflow.com/a/67343635/3929620
 - https://github.com/YahnisElsts/plugin-update-checker/
+- https://daext.com/blog/detect-and-fix-wordpress-coding-standard-violations-with-php-codesniffer/
+- https://github.com/WordPress/WordPress-Coding-Standards
+- https://wordpress.org/plugins/developers/readme-validator/
+- https://rudrastyh.com/wordpress/publish-plugin-to-wordpress-repository.html
+- https://imranhsayed.medium.com/submitting-a-new-wordpress-plugin-and-uploading-it-on-svn-4e38212d2b08
+- https://developer.wordpress.org/plugins/wordpress-org/how-your-readme-txt-works/
+- https://developer.wordpress.org/plugins/wordpress-org/plugin-assets/
 
 ## WP GitHub Actions
 
 - https://github.com/10up/actions-wordpress
+- https://github.com/marketplace/actions/wordpress-plugin-svn-deploy
 
 ## WP Theme + Twig
 
@@ -96,6 +104,10 @@
 ## Badges
   
 - https://github.com/badges/awesome-badges
+
+## Coding standards
+
+- https://medium.com/@hksingla92/casings-in-psr-php-standard-recommendations-493a58f002a1
 
 ## License
 

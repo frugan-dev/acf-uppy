@@ -1,12 +1,13 @@
-=== Advanced Custom Fields: Uppy Field ===
-Contributors: frugan
+=== ACF Uppy Field ===
+Contributors: Frugan
 Tags: acf, fields, custom fields, meta, repeater
 Requires at least: 5.6.0
-Tested up to: 6.5.4
-Stable tag: 2.0.0
+Tested up to: 6.6.1
+Stable tag: 2.1.0
 Requires PHP: 8.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
+Donate link: https://buymeacoff.ee/frugan
 
 Uppy Field for Advanced Custom Fields
 
@@ -16,15 +17,15 @@ __ACF Uppy Field__ is a WordPress plugin that adds a new `Uppy` custom field to 
 
 = Requirements =
 
-See (here)[https://github.com/frugan-dev/acf-uppy?tab=readme-ov-file#requirements]
+@see https://github.com/frugan-dev/acf-uppy?tab=readme-ov-file#requirements
 
 == Installation ==
 
-See (here)[https://github.com/frugan-dev/acf-uppy?tab=readme-ov-file#installation]
+@see https://github.com/frugan-dev/acf-uppy?tab=readme-ov-file#installation
 
 == Changelog ==
 
-See (here)[https://github.com/frugan-dev/acf-uppy/blob/master/CHANGELOG.md]
+@see https://github.com/frugan-dev/acf-uppy/blob/master/CHANGELOG.md
 
 = Links =
 * [Github](https://github.com/frugan-dev/acf-uppy)

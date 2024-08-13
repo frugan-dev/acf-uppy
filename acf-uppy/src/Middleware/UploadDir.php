@@ -48,6 +48,7 @@ class UploadDir implements TusMiddleware
     {
         if ('GET' !== $request->method()) {
             $fieldName = $request->header('Field-Name');
+
             if (null === $fieldName) {
                 throw new \Exception(__('Wrong headers', ACF_UPPY_NAME));
             }
@@ -60,7 +61,8 @@ class UploadDir implements TusMiddleware
                 wp_mkdir_p($this->server->getUploadDir());
 
                 // https://github.com/ankitpokhrel/tus-php/issues/102
-                /*$cacheKeys = $this->server->getCache()->keys();
+                /*
+                $cacheKeys = $this->server->getCache()->keys();
                 //$this->server->getCache()->deleteAll( $cacheKeys );
 
                 foreach( $cacheKeys as $cacheKey ) {
