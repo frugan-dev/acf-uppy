@@ -8,6 +8,7 @@
 + symlink/**
 + vendor/
 - vendor/bin/
+- vendor/predis/predis/docker/unstable_cluster/
 + vendor/**
 + readme.txt
 + acf-uppy.php
