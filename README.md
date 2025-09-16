@@ -12,6 +12,10 @@
 ![Code Climate](https://img.shields.io/codeclimate/maintainability/frugan-dev/upload-field-with-uppy-for-acf)
 -->
 
+> [!IMPORTANT]
+> **🚧 Plugin Rework in Progress**  
+> This plugin is currently undergoing a major rework to improve performance, security, and user experience. Please expect significant changes in upcoming versions. We recommend testing thoroughly in staging environments before updating to future releases.
+
 # Upload Field with Uppy for ACF (WordPress Plugin)
 
 __Upload Field with Uppy for ACF__ is a WordPress plugin that adds a new `Uppy` custom field to the list of fields of the [Advanced Custom Fields](https://www.advancedcustomfields.com) plugin. This custom field allows you to __upload files of all types and sizes__ using the [TUS protocol](https://tus.io) and the [Uppy JS uploader](https://uppy.io), overcoming the limitations of the default ACF `File` field. With __Upload Field with Uppy for ACF__, you no longer need to increase server-side INI parameters such as `upload_max_filesize`, `post_max_size`, `max_execution_time` and `memory_limit`.
